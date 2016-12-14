@@ -74,7 +74,7 @@
 	// Interface delays
 
 		// How many time the info screen will be showed at startup
-		#define AFTER_WELCOME_DELAY 1000
+		#define AFTER_WELCOME_DELAY 3000
 
 		// Time to wait after every Temp++/-- button press WITHOUT READING
 		#define TEMP_BUTTON_DELAY 50
@@ -114,6 +114,18 @@
 		// Also between -127 and 127
 		#define START_TEMPERATURE 25
 
+	// LCD characters configuration
+
+		#define LCD_ALARM_ENABLED_0 '!'
+		#define LCD_ALARM_ENABLED_1 255 // a character full of black dots C:
+
+		#define LCD_ALARM_DISABLED '-'
+
+		#define LCD_REVERSE_ALARM_0 60 // >
+		#define LCD_REVERSE_ALARM_1 62 // <
+
+		#define LCD_DEGREE_CHAR 223
+
 	// Other config
 
 		// Comment it to disable
@@ -129,23 +141,22 @@
 	bool AlarmEnabled = false;
 	bool AlarmReverse = false;
 
-	bool BlinkingCharacterEnabled = false;
-	unsigned long BlinkingCharacterUntil;
+	bool BlinkingCharacterCurrent = 1; // LCD_ALARM_ENABLED_0 will be printed first (this variable will get toggled)
+	unsigned long BlinkingCharacterUntil = 0;
 
-	// Instance LCD library
+	// LCD library
 	SerialLCD LCD(LCD_RX_PIN, LCD_TX_PIN);
 
-	// Instance OneWire and DallasTemperature
+	// OneWire and DallasTemperature
 	OneWire OneWireBus(ONE_WIRE_BUS);
 	DallasTemperature Sensors(&OneWireBus);
 
-	// Instance OneWireSwitches
-	OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesVCCResistors, SWITCHES_GROUND_RESISTOR, SWITCHES_RESISTOR_TOLERANCE);
+	// OneWireSwitches
+	OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesR1, SWITCHES_R2, SWITCHES_RESISTOR_TOLERANCE);
 
 	void setup()
 	{
 		// Configure Buzzer Pin
-
 		pinMode(BUZZER_PIN, OUTPUT);
 
 		// Init LCD
@@ -179,16 +190,24 @@
 
 		delay(AFTER_WELCOME_DELAY);
 
-		// Write some info characters
+		// LCD template (this characters will never be erased :P)
 
 		LCD.clear();
 		LCD.home(); // Needed, else the character get written in the first row
 
-		LCD.setCursor(15, 0);
-		LCD.print(45);
+		LCD.print("Alarm: ");
+		LCD.setCursor(12, 0);
+		LCD.print(LCD_DEGREE_CHAR);
+		LCD.print('C');
 
-		LCD.setCursor(15, 1);
-		LCD.print(AlarmReverse ? 60 : 62); // ">" or "<"
+		LCD.setCursor(0, 1);
+		LCD.print("Temp: ");
+		LCD.setCursor(12, 1);
+		LCD.print(LCD_DEGREE_CHAR);
+		LCD.print('C');
+
+		ClearBlinkingCharacter();
+		UpdateModeCharacter();
 	}
 
 	void loop()
@@ -198,6 +217,9 @@
 
 		if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD)
 		{
+			// If the user pressed Temp++
+
+			// Limit temperature
 			if(AlarmTemperature < HIGHEST_TEMPERATURE)
 				AlarmTemperature++;
 
@@ -205,6 +227,9 @@
 		}
 		else if(ReadPulse(TEMP_MINUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD)
 		{
+			// If the user pressed Temp--
+
+			// Limit temperature
 			if(AlarmTemperature > LOWEST_TEMPERATURE)
 				AlarmTemperature--;
 
@@ -212,44 +237,41 @@
 		}
 		else if(ReadPulse(START_STOP_ID, START_STOP_BUTTON_THRESHOLD) >= START_STOP_BUTTON_THRESHOLD)
 		{
+			// If the user pressed Start/Stop
+
 			if(AlarmEnabled)
 			{
+				// If the alarm is enabled we disable it and drive buzzer LOW (even if the alarm was not triggered)
+				// Then, we write LCD_ALARM_DISABLED in the display, as alarm enable flag
+
 				digitalWrite(BUZZER_PIN, LOW);
 
+				ClearBlinkingCharacter();
+
 				AlarmEnabled = false;
-				
-				LCD.setCursor(15, 0);
-				LCD.print(45);
 			}
 			else
-			{
-				AlarmEnabled = true;
-				
-				ResetBlinkingCharacter(false);
-			}
+				AlarmEnabled = true; // If the alarm is not enabled, we'll make it happen
 
 			delay(START_STOP_BUTTON_DELAY);
 		}
 		else if(ReadPulse(CHANGE_MODE_ID, CHANGE_MODE_BUTTON_THRESHOLD) >= CHANGE_MODE_BUTTON_THRESHOLD)
 		{
+			// If the user pressed ChangeMode
+
 			AlarmReverse = !AlarmReverse;
 
-			LCD.setCursor(15, 1);
-			LCD.print(AlarmReverse ? 60 : 62); // ">" or "<"
+			UpdateModeCharacter();
 
 			delay(CHANGE_MODE_BUTTON_DELAY);
 		}
 
-		// Show Alarm Temperature
+		// Show AlarmTemperature
 
-		LCD.setCursor(0, 0);
-		LCD.print("Alarma: ");
-		if(AlarmTemperature < 0)
-			LCD.print("-");
+		LCD.setCursor(7, 0);
+		LCD.print(AlarmTemperature < 0 ? '-' : ' ');
 		LCD.print((unsigned long) abs(AlarmTemperature), DEC);
-		LCD.print(" ");
-		LCD.print(223);
-		LCD.print("C ");
+		LCD.print(' ');
 
 		// Show current temperature at sensor
 
@@ -257,24 +279,22 @@
 
 		if(Temperature != DEVICE_DISCONNECTED_C)
 		{
-			LCD.setCursor(0, 1);
-			LCD.print("Temp: ");
-			if(Temperature < 0)
-				LCD.print("-");
+			LCD.setCursor(6, 1);
+			LCD.print(Temperature < 0 ? '-' : ' ');
 			LCD.print((unsigned long) abs(Temperature), DEC);
-			LCD.print(".");
+			LCD.print('.');
 			LCD.print((Temperature - (long) Temperature) * 10, DEC);
-			LCD.print(" ");
-			LCD.print(223);
-			LCD.print("C ");
+			LCD.print(' ');
 		}
 		else
 		{
+			// If the sensor gets disconnected, we'll print it
+
 			LCD.clear();
 			LCD.home();
 			LCD.print("Sensor");
-			LCD.setCursor(0, 1);
-			LCD.print("    disconnected");
+			LCD.setCursor(4, 1);
+			LCD.print("disconnected");
 
 			while(1);
 		}
@@ -285,14 +305,7 @@
 		{
 			// Write some status info in the LCD
 
-			if(millis() >= BlinkingCharacterUntil)
-			{
-				LCD.setCursor(15, 0);
-
-				LCD.print(BlinkingCharacterEnabled ? 33 : ' ');
-
-				ResetBlinkingCharacter(!BlinkingCharacterEnabled);
-			}
+			UpdateBlinkingCharacter();
 
 			// If the threshold is obove or below the setted temperature, activate the alarm
 
@@ -323,8 +336,27 @@
 		return Time;
 	}
 
-	void ResetBlinkingCharacter(bool Enabled)
+	void UpdateBlinkingCharacter()
 	{
-		BlinkingCharacterEnabled = Enabled;
-		BlinkingCharacterUntil = millis() + BLINKING_CHARACTER_DELAY;
+		if(millis() >= BlinkingCharacterUntil || BlinkingCharacterUntil == 0)
+		{
+			LCD.setCursor(15, 0);
+
+			LCD.print(BlinkingCharacterCurrent ? LCD_ALARM_ENABLED_0 : LCD_ALARM_ENABLED_1);
+
+			BlinkingCharacterCurrent = !BlinkingCharacterCurrent;
+			BlinkingCharacterUntil = millis() + BLINKING_CHARACTER_DELAY;
+		}
+	}
+
+	void ClearBlinkingCharacter()
+	{
+		LCD.setCursor(15, 0);
+		LCD.print(LCD_ALARM_DISABLED);
+	}
+
+	void UpdateModeCharacter()
+	{
+		LCD.setCursor(15, 1);
+		LCD.print(AlarmReverse ? LCD_REVERSE_ALARM_0 : LCD_REVERSE_ALARM_1);
 	}
