@@ -338,7 +338,7 @@
 
 	void UpdateBlinkingCharacter()
 	{
-		if(millis() >= BlinkingCharacterUntil || BlinkingCharacterUntil == 0)
+		if(millis() >= BlinkingCharacterUntil)
 		{
 			LCD.setCursor(15, 0);
 
