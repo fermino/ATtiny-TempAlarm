@@ -2,7 +2,6 @@
  * To do: 
  * Add PWM capabilities (instead of active buzzer, configurable)
  * Add histeresis
- * Print a template in the screen at startup, then, only update the variable data
  * Store last AlarmTemperature in EEPROM
  * Add Fahrenheit (maybe Kelvin?) capabilities
  * Software backlight control
