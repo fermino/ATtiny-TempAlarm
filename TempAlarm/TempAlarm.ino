@@ -1,7 +1,6 @@
 /**
  * To do: 
  * Add PWM capabilities (instead of active buzzer, configurable)
- * Add histeresis
  * Store last AlarmTemperature in EEPROM
  * Add Fahrenheit (maybe Kelvin?) capabilities
  * Software backlight control
