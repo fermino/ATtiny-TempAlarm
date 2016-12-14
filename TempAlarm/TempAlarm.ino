@@ -1,3 +1,11 @@
+/**
+ * To do: 
+ * Add PWM capabilities (instead of active buzzer, configurable)
+ * Add histeresis
+ * Print a template in the screen at startup, then, only update the variable data
+ * Store last AlarmTemperature in EEPROM
+ */
+
 	// LCD
 	#include <SerialLCD.h>
 	#include <SoftwareSerial.h>
