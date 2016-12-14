@@ -9,56 +9,104 @@
 	// Using one analog input for read multiple pushbutons
 	#include <OneWireSwitches.h>
 
-	// LCD configuration
+	/**
+	 * BEGIN CONFIG
+	 */
+
+	// Project's pinout
+
+		// ATtiny RX <-- LCD TX
+		// ATtiny TX --> LCD RX
 		#define LCD_RX_PIN 0
 		#define LCD_TX_PIN 1
 
-	// Temperature sensor configuration
-		#define ONE_WIRE_BUS 3 // Disturbs the SPI signals while programming if connected at pint 2
-
-	// User interface configuration
-		#define AFTER_WELCOME_DELAY 1000 // How many time we'll wait before start working
-
-		#define HIGHEST_TEMPERATURE 100 // Up to 127
-		#define LOWEST_TEMPERATURE -20 // Up to -127
-
-		#define START_TEMPERATURE 25 // Between -127 and 127
-
-		#define TEMP_BUTTON_THRESHOLD 50
-		#define TEMP_BUTTON_DELAY 50
-
-		#define START_STOP_BUTTON_THRESHOLD 150
-		#define START_STOP_BUTTON_DELAY 500
-
-		#define CHANGE_MODE_BUTTON_THRESHOLD 50
-		#define CHANGE_MODE_BUTTON_DELAY 500
-
-		#define BLINKING_CHARACTER_DELAY 500
-
+		// An active buzzer
 		#define BUZZER_PIN 2
 
-	// OneWireSwitches configuration
+		// Data pin of temperature sensor
+		// Disturbs the SPI signals while programming if connected to pin 2 (or other SPI pin) 
+		#define ONE_WIRE_BUS 3
+
+		// OneWireSwitches input pin
 		#define SWITCHES_INPUT_PIN A2
 
+	// OneWireSwitches configuration
+
+		// This works by dividing voltages on only one analog input
+		// See https://learn.sparkfun.com/tutorials/voltage-dividers
+
+		// How many switches do we have?
 		#define SWITCHES_AMOUNT 4
 
-		#define SWITCHES_GROUND_RESISTOR 10000 // 10K resistor (tied from SWITCHES_INPUT_PIN to ground)
-		#define SWITCHES_RESISTOR_TOLERANCE 100 // 10%, % resistor's tolerance multiplied by 10
-
-		// Resistors array indexes
+		// Define array indexes to make the code prettier :P
 		#define TEMP_PLUS_ID 0
 		#define TEMP_MINUS_ID 1
 		#define START_STOP_ID 2
 		#define CHANGE_MODE_ID 3
 
-		// Resistor values (tied to VCC)
-		const uint32_t SwitchesVCCResistors[SWITCHES_AMOUNT]
+		// What is the resistor tolerance? 
+		// %, multiplied by 10, 5% should be 50
+		#define SWITCHES_RESISTOR_TOLERANCE 100
+
+		// Value of R2 in the voltage divider, the resistor tied from SWITCHES_INPUT_PIN to ground
+		#define SWITCHES_R2 10000 // 10K
+
+		// R1 values, resistors tied from SWITCHES_INPUT_PIN to every pushbutton
+		// The button input then should be tied to VCC
+		const uint32_t SwitchesR1[SWITCHES_AMOUNT]
 		{
 			100000,	// 100K
 			22000,	// 22K
 			10000,	// 10K
 			1000	// 1K
 		};
+
+	// Interface delays
+
+		// How many time the info screen will be showed at startup
+		#define AFTER_WELCOME_DELAY 1000
+
+		// Time to wait after every Temp++/-- button press WITHOUT READING
+		#define TEMP_BUTTON_DELAY 50
+
+		// Time to wait after every Start/Stop button press WITHOUT READING
+		// This will avoid multiple presses with only one click
+		#define START_STOP_BUTTON_DELAY 500
+		
+		// Time to wait after every ChangeMode button press WITHOUT READING
+		// This will avoid multiple presses with only one click
+		#define CHANGE_MODE_BUTTON_DELAY 500
+
+		// When the alarm is enabled, it will show two blinking characters in the screen
+		// How many time should we wait before switching them?
+		#define BLINKING_CHARACTER_DELAY 500
+
+	// Button thresholds
+
+		// How many time should the user press Temp++/-- in order to be detected as a press?
+		#define TEMP_BUTTON_THRESHOLD 50
+
+		// The same, with Start/Stop button
+		#define START_STOP_BUTTON_THRESHOLD 150
+
+		// Yeah, the same, you should know what button we're talking about..
+		// OKAY, RIGHT, I'M TIRED OF USING CTRL+C/CTRL+V
+		#define CHANGE_MODE_BUTTON_THRESHOLD 50
+
+	// Temperature limits and default data
+
+		// Temperature limits in the alarm config
+		// Should be between -127 and 127, as AlarmTemperature is an 8-bit integer
+		#define HIGHEST_TEMPERATURE 100
+		#define LOWEST_TEMPERATURE -20
+
+		// Default AlarmTemperature at startup
+		// Also between -127 and 127
+		#define START_TEMPERATURE 25
+
+	/**
+	 * END CONFIG
+	 */
 
 	// This variable holds the temp that must be reached before alarm activation
 	int8_t AlarmTemperature = START_TEMPERATURE;
