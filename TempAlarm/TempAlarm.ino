@@ -4,6 +4,8 @@
  * Add histeresis
  * Print a template in the screen at startup, then, only update the variable data
  * Store last AlarmTemperature in EEPROM
+ * Add Fahrenheit (maybe Kelvin?) capabilities
+ * Software backlight control
  */
 
 	// LCD
@@ -112,6 +114,11 @@
 		// Also between -127 and 127
 		#define START_TEMPERATURE 25
 
+	// Other config
+
+		// Comment it to disable
+		#define LCD_BACKLIGHT_ON
+
 	/**
 	 * END CONFIG
 	 */
@@ -146,7 +153,12 @@
 		delay(100);
 
 		LCD.begin();
-		LCD.backlight();
+
+		#ifdef LCD_BACKLIGHT_ON
+			LCD.backlight();
+		#else
+			LCD.noBacklight();
+		#endif
 
 		// Init OneWire and DallasTemperature
 		Sensors.begin();
