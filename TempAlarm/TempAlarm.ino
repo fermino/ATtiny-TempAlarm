@@ -3,6 +3,7 @@
  * Add PWM capabilities (instead of active buzzer, configurable)
  * Add Fahrenheit (maybe Kelvin?) capabilities
  * Software backlight control
+ * Calculate remaining time
  */
 
 	// EEPROM
@@ -54,7 +55,7 @@
 		#define START_STOP_ID 2
 		#define CHANGE_MODE_ID 3
 
-		// What is the resistor tolerance? 
+		// What is the resistor tolerance?
 		// %, multiplied by 10, 5% should be 50
 		#define SWITCHES_RESISTOR_TOLERANCE 100
 
