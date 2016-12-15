@@ -1,10 +1,12 @@
 /**
  * To do: 
  * Add PWM capabilities (instead of active buzzer, configurable)
- * Store last AlarmTemperature in EEPROM
  * Add Fahrenheit (maybe Kelvin?) capabilities
  * Software backlight control
  */
+
+	// EEPROM
+	#include <avr/eeprom.h>
 
 	// LCD
 	#include <SerialLCD.h>
@@ -108,7 +110,7 @@
 		#define HIGHEST_TEMPERATURE 100
 		#define LOWEST_TEMPERATURE -20
 
-		// Default AlarmTemperature at startup
+		// Default AlarmTemperature at startup if the value stored in the EEPROM is not valid
 		// Also between -127 and 127
 		#define START_TEMPERATURE 25
 
@@ -129,12 +131,15 @@
 		// Comment it to disable
 		#define LCD_BACKLIGHT_ON
 
+		// Where is stored the last temperature?
+		#define EEPROM_TEMPERATURE_ADDRESS 0
+
 	/**
 	 * END CONFIG
 	 */
 
 	// This variable holds the temp that must be reached before alarm activation
-	int8_t AlarmTemperature = START_TEMPERATURE;
+	int8_t AlarmTemperature;
 
 	bool AlarmEnabled = false;
 	bool AlarmReverse = false;
@@ -157,6 +162,15 @@
 		// Configure Buzzer Pin
 		pinMode(BUZZER_PIN, OUTPUT);
 
+		// Get data from EEPROM
+
+		AlarmTemperature = eeprom_read_byte(EEPROM_TEMPERATURE_ADDRESS);
+
+		if(AlarmTemperature < LOWEST_TEMPERATURE || AlarmTemperature > HIGHEST_TEMPERATURE)
+		{
+			AlarmTemperature = START_TEMPERATURE;
+			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
+		}
 		// Init LCD
 
 		delay(100);
@@ -250,6 +264,10 @@
 			}
 			else
 				AlarmEnabled = true; // If the alarm is not enabled, we'll make it happen
+
+			// And, we store that value in the EEPROM
+			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
+			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
 
 			delay(START_STOP_BUTTON_DELAY);
 		}
