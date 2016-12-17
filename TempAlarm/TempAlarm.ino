@@ -50,10 +50,10 @@
 		#define SWITCHES_AMOUNT 4
 
 		// Define array indexes to make the code prettier :P
-		#define TEMP_PLUS_ID 0
+		#define TEMP_PLUS_ID 2
 		#define TEMP_MINUS_ID 1
-		#define START_STOP_ID 2
-		#define CHANGE_MODE_ID 3
+		#define START_STOP_ID 3
+		#define CHANGE_MODE_ID 0
 
 		// What is the resistor tolerance?
 		// %, multiplied by 10, 5% should be 50
@@ -95,14 +95,14 @@
 	// Button thresholds
 
 		// How many time should the user press Temp++/-- in order to be detected as a press?
-		#define TEMP_BUTTON_THRESHOLD 50
+		#define TEMP_BUTTON_THRESHOLD 25
 
 		// The same, with Start/Stop button
-		#define START_STOP_BUTTON_THRESHOLD 150
+		#define START_STOP_BUTTON_THRESHOLD 25
 
 		// Yeah, the same, you should know what button we're talking about..
 		// OKAY, RIGHT, I'M TIRED OF USING CTRL+C/CTRL+V
-		#define CHANGE_MODE_BUTTON_THRESHOLD 50
+		#define CHANGE_MODE_BUTTON_THRESHOLD 25
 
 	// Temperature limits and default data
 
@@ -206,7 +206,7 @@
 		// LCD template (this characters will never be erased :P)
 
 		LCD.clear();
-		LCD.home(); // Needed, else the character get written in the first row
+		LCD.home(); // Needed, else the characters get written in the first row
 
 		LCD.print("Alarm: ");
 		LCD.setCursor(12, 0);
