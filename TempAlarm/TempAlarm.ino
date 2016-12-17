@@ -135,6 +135,9 @@
 		// Where is stored the last temperature?
 		#define EEPROM_TEMPERATURE_ADDRESS 0
 
+		// Where is stored the last alarm mode?
+		#define EEPROM_MODE_ADDRESS 1
+
 	/**
 	 * END CONFIG
 	 */
@@ -143,7 +146,7 @@
 	int8_t AlarmTemperature;
 
 	bool AlarmEnabled = false;
-	bool AlarmReverse = false;
+	bool AlarmReverse;
 
 	bool BlinkingCharacterCurrent = 1; // LCD_ALARM_ENABLED_0 will be printed first (this variable will get toggled)
 	unsigned long BlinkingCharacterUntil = 0;
@@ -172,6 +175,15 @@
 			AlarmTemperature = START_TEMPERATURE;
 			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
 		}
+
+		AlarmReverse = eeprom_read_byte(EEPROM_MODE_ADDRESS);
+
+		if(AlarmReverse != false && AlarmReverse != true)
+		{
+			AlarmReverse = false;
+			eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
+		}
+
 		// Init LCD
 
 		delay(100);
@@ -266,9 +278,10 @@
 			else
 				AlarmEnabled = true; // If the alarm is not enabled, we'll make it happen
 
-			// And, we store that value in the EEPROM
+			// And, we store the temperature and the mode in the EEPROM
 			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
 			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
+			eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
 
 			delay(START_STOP_BUTTON_DELAY);
 		}
