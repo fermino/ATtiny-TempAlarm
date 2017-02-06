@@ -1,6 +1,10 @@
 # ATtiny-TempAlarm
 A programable temperature alarm with ATtiny85, DS18B20 temperature sensor and Grove Serial LCD
 
+## Hardware
+
+I made a schematic and a PCB of the project using DipTrace; you can find it inside hardware/.
+
 ## Fuses
 
 The Grove Serial LCD only works with the MCU running at 16MHz, so, the fuses are: 
