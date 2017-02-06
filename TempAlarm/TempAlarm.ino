@@ -10,8 +10,8 @@
 	#include <avr/eeprom.h>
 
 	// LCD
-	#include <SerialLCD.h>
-	#include <SoftwareSerial.h>
+	#include <TinyWireM.h> // I2C lib
+	#include <LiquidCrystal_I2C.h>
 
 	// DS18B20 (DS1820 and DS1820 should work too)
 	#include <OneWire.h>
@@ -26,13 +26,13 @@
 
 	// Project's pinout
 
-		// ATtiny RX <-- LCD TX
-		// ATtiny TX --> LCD RX
-		#define LCD_RX_PIN 0
-		#define LCD_TX_PIN 1
+		/** LCD pinout
+		 * SDA <=> ATtiny's pin 5 (Digital IO #0)
+		 * SCL <=> ATtiny's pin 7 (Digital IO #2)
+		 */
 
 		// An active buzzer
-		#define BUZZER_PIN 2
+		#define BUZZER_PIN 1
 
 		// Data pin of temperature sensor
 		// Disturbs the SPI signals while programming if connected to pin 2 (or other SPI pin) 
@@ -115,7 +115,9 @@
 		// Also between -127 and 127
 		#define START_TEMPERATURE 25
 
-	// LCD characters configuration
+	// LCD configuration
+
+		#define LCD_I2C_ADDRESS 0x27 // The address of the I2C Port Expander
 
 		#define LCD_ALARM_ENABLED_0 '!'
 		#define LCD_ALARM_ENABLED_1 255 // a character full of black dots C:
@@ -152,7 +154,7 @@
 	unsigned long BlinkingCharacterUntil = 0;
 
 	// LCD library
-	SerialLCD LCD(LCD_RX_PIN, LCD_TX_PIN);
+	LiquidCrystal_I2C LCD(LCD_I2C_ADDRESS, 20, 4); // Columns and Rows
 
 	// OneWire and DallasTemperature
 	OneWire OneWireBus(ONE_WIRE_BUS);
@@ -188,7 +190,7 @@
 
 		delay(100);
 
-		LCD.begin();
+		LCD.init();
 
 		#ifdef LCD_BACKLIGHT_ON
 			LCD.backlight();
