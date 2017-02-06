@@ -120,14 +120,14 @@
 		#define LCD_I2C_ADDRESS 0x27 // The address of the I2C Port Expander
 
 		#define LCD_ALARM_ENABLED_0 '!'
-		#define LCD_ALARM_ENABLED_1 255 // a character full of black dots C:
+		#define LCD_ALARM_ENABLED_1 (char) 255 // a character full of black dots C:
 
 		#define LCD_ALARM_DISABLED '-'
 
-		#define LCD_REVERSE_ALARM_0 60 // >
-		#define LCD_REVERSE_ALARM_1 62 // <
+		#define LCD_REVERSE_ALARM_0 '>' // >
+		#define LCD_REVERSE_ALARM_1 '<' // <
 
-		#define LCD_DEGREE_CHAR 223
+		#define LCD_DEGREE_CHAR (char) 223
 
 	// Other config
 
@@ -301,8 +301,7 @@
 		// Show AlarmTemperature
 
 		LCD.setCursor(7, 0);
-		LCD.print(AlarmTemperature < 0 ? '-' : ' ');
-		LCD.print((unsigned long) abs(AlarmTemperature), DEC);
+		LCD.print(AlarmTemperature);
 		LCD.print(' ');
 
 		// Show current temperature at sensor
@@ -312,11 +311,8 @@
 		if(Temperature != DEVICE_DISCONNECTED_C)
 		{
 			LCD.setCursor(6, 1);
-			LCD.print(Temperature < 0 ? '-' : ' ');
-			LCD.print((unsigned long) abs(Temperature), DEC);
-			LCD.print('.');
-			LCD.print((Temperature - (long) Temperature) * 10, DEC);
-			LCD.print(' ');
+			LCD.print(Temperature, 1);
+			LCD.print("  ");
 		}
 		else
 		{
