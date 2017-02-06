@@ -298,7 +298,7 @@
 
 		// Show AlarmTemperature
 
-		LCD.setCursor(AlarmTemperature > 99 ? 7 : 8, 0);
+		LCD.setCursor(7, 0);
 		LCD.print(AlarmTemperature < 0 ? '-' : ' ');
 		LCD.print((unsigned long) abs(AlarmTemperature), DEC);
 		LCD.print(' ');
