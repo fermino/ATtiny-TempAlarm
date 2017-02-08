@@ -47,7 +47,7 @@
 		LCD.setCursor(0, 1);
 		LCD.print("  By @fermino");
 
-		delay(AFTER_WELCOME_DELAY);
+		delay(LCD_AFTER_WELCOME_DELAY);
 
 		// Init Modules
 

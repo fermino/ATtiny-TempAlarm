@@ -4,7 +4,6 @@
 	 * BEGIN CONFIG
 	 * 
 	 * To do: 
-	 * Correct some names
 	 * Add some defines, as the time between sensor's reads
 	 */
 
@@ -35,8 +34,8 @@
 
 		#define LCD_ALARM_DISABLED '-'
 
-		#define LCD_ALARM_DIRECTION_0 '>'
-		#define LCD_ALARM_DIRECTION_1 '<'
+		#define LCD_TEMP_ALARM_DIRECTION_0 '>'
+		#define LCD_TEMP_ALARM_DIRECTION_1 '<'
 
 		#define LCD_DEGREE_CHAR (char) 223
 
@@ -114,8 +113,8 @@
 	 * last used temperature and alarm direction. 
 	 */
 
-		#define EEPROM_TEMPERATURE_ADDRESS 0
-		#define EEPROM_DIRECTION_ADDRESS 1
+		#define EEPROM_ADDRESS_TEMP_THRESHOLD 0
+		#define EEPROM_ADDRESS_TEMP_DIRECTION 1
 
 	/**
 	 * Alarm
@@ -124,7 +123,7 @@
 	 */
 
 		// How many time the info screen will be showed at startup
-		#define AFTER_WELCOME_DELAY 500
+		#define LCD_AFTER_WELCOME_DELAY 500
 
 		// To do: PWM output
 		#define BUZZER_PIN 1
@@ -143,12 +142,12 @@
 		#define ONE_WIRE_BUS 3
 
 		// Between -127 and 127, as TemperatureAlarmThreshold is an 8-bit integer
-		#define HIGHEST_TEMPERATURE 100
-		#define LOWEST_TEMPERATURE -20
+		#define TEMP_HIGHEST_THRESHOLD 100
+		#define TEMP_LOWEST_THRESHOLD -20
 
 		// Default at startup if the value stored in the EEPROM is not valid
 		// Also between -127 and 127
-		#define START_TEMPERATURE 25
+		#define TEMP_DEFAULT_THRESHOLD 25
 
 		// Some characters blink on the screen on certain situations. 
 		// What should be the delay between everyone of them?

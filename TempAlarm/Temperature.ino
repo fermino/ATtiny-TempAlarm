@@ -40,11 +40,11 @@
 
 		// Get last used data from EEPROM
 
-		TemperatureThreshold = eeprom_read_byte(EEPROM_TEMPERATURE_ADDRESS);
-		if(TemperatureThreshold < LOWEST_TEMPERATURE || TemperatureThreshold > HIGHEST_TEMPERATURE)
-			TemperatureThreshold = START_TEMPERATURE;
+		TemperatureThreshold = eeprom_read_byte(EEPROM_ADDRESS_TEMP_THRESHOLD);
+		if(TemperatureThreshold < TEMP_LOWEST_THRESHOLD || TemperatureThreshold > TEMP_HIGHEST_THRESHOLD)
+			TemperatureThreshold = TEMP_DEFAULT_THRESHOLD;
 
-		TemperatureAlarmDirection = eeprom_read_byte(EEPROM_DIRECTION_ADDRESS);
+		TemperatureAlarmDirection = eeprom_read_byte(EEPROM_ADDRESS_TEMP_DIRECTION);
 		if(TemperatureAlarmDirection != 0 && TemperatureAlarmDirection != 1)
 			TemperatureAlarmDirection = 0;
 
@@ -96,7 +96,7 @@
 		else if(ReadPulse(TEMP_MINUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp--
 		{
 			// Limit temperature
-			if(TemperatureThreshold > LOWEST_TEMPERATURE)
+			if(TemperatureThreshold > TEMP_LOWEST_THRESHOLD)
 				TemperatureThreshold--;
 
 			delay(TEMP_BUTTON_DELAY);
@@ -104,7 +104,7 @@
 		else if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp++
 		{
 			// Limit temperature
-			if(TemperatureThreshold < HIGHEST_TEMPERATURE)
+			if(TemperatureThreshold < TEMP_HIGHEST_THRESHOLD)
 				TemperatureThreshold++;
 
 			delay(TEMP_BUTTON_DELAY);
@@ -117,8 +117,8 @@
 
 			// Store the temperature and the direction in the EEPROM
 			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
-			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, TemperatureThreshold);
-			eeprom_update_byte(EEPROM_DIRECTION_ADDRESS, TemperatureAlarmDirection);
+			eeprom_update_byte(EEPROM_ADDRESS_TEMP_THRESHOLD, TemperatureThreshold);
+			eeprom_update_byte(EEPROM_ADDRESS_TEMP_DIRECTION, TemperatureAlarmDirection);
 
 			delay(START_STOP_BUTTON_DELAY);
 		}
@@ -175,7 +175,7 @@
 			LCD.print(LCD_ALARM_DISABLED);
 
 		LCD.setCursor(15, 1);
-		LCD.print(TemperatureAlarmDirection ? LCD_ALARM_DIRECTION_1 : LCD_ALARM_DIRECTION_0);
+		LCD.print(TemperatureAlarmDirection ? LCD_TEMP_ALARM_DIRECTION_1 : LCD_TEMP_ALARM_DIRECTION_0);
 	}
 
 	bool isTemperatureAlarmOn()
