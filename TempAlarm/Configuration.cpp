@@ -30,7 +30,7 @@
 		#define SWITCHES_AMOUNT 8
 
 		// Define array indexes to make the code prettier :P
-		#define CHANGE_MODE_ID 0
+		#define CHANGE_DIR_ID 0
 		#define TEMP_MINUS_ID 1
 		#define TEMP_PLUS_ID 2
 		#define START_STOP_ID 3
@@ -73,9 +73,9 @@
 		// This will avoid multiple presses with only one click
 		#define START_STOP_BUTTON_DELAY 500
 		
-		// Time to wait after every ChangeMode button press WITHOUT READING
+		// Time to wait after every ChangeDir button press WITHOUT READING
 		// This will avoid multiple presses with only one click
-		#define CHANGE_MODE_BUTTON_DELAY 500
+		#define CHANGE_DIR_BUTTON_DELAY 500
 
 		// How many time should be wait between every blinking char in the screen
 		#define BLINKING_CHARACTER_DELAY 500
@@ -90,7 +90,7 @@
 
 		// Yeah, the same, you should know what button we're talking about..
 		// OKAY, RIGHT, I'M TIRED OF USING CTRL+C/CTRL+V
-		#define CHANGE_MODE_BUTTON_THRESHOLD 25
+		#define CHANGE_DIR_BUTTON_THRESHOLD 25
 
 	// Temperature limits and default data
 
@@ -115,8 +115,8 @@
 
 		#define LCD_ALARM_DISABLED '-'
 
-		#define LCD_REVERSE_ALARM_0 '>' // >
-		#define LCD_REVERSE_ALARM_1 '<' // <
+		#define LCD_ALARM_DIRECTION_0 '>' // >
+		#define LCD_ALARM_DIRECTION_1 '<' // <
 
 		#define LCD_DEGREE_CHAR (char) 223
 
@@ -136,8 +136,8 @@
 		// Where is stored the last temperature?
 		#define EEPROM_TEMPERATURE_ADDRESS 0
 
-		// Where is stored the last alarm mode?
-		#define EEPROM_MODE_ADDRESS 1
+		// Where is stored the last alarm direction?
+		#define EEPROM_DIRECTION_ADDRESS 1
 
 	/**
 	 * END CONFIG

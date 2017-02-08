@@ -4,6 +4,7 @@
  * Add Fahrenheit (maybe Kelvin?) capabilities
  * Software backlight control
  * Calculate remaining time
+ * Add DHT22 (environment temperature)
  */
 
 	// EEPROM
@@ -69,95 +70,7 @@
 	{
 		TemperatureLoop();
 
-		// ReadPulse should not return anything higher than Timeout, but well, using >= instead ==
-		// has no effect over flash/memory usage, so, it can avoid further problems if code gets changed
-
-		/*if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD)
-		{
-			// If the user pressed Temp++
-
-			// Limit temperature
-			if(AlarmTemperature < HIGHEST_TEMPERATURE)
-				AlarmTemperature++;
-
-			delay(TEMP_BUTTON_DELAY);
-		}
-		else if(ReadPulse(TEMP_MINUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD)
-		{
-			// If the user pressed Temp--
-
-			// Limit temperature
-			if(AlarmTemperature > LOWEST_TEMPERATURE)
-				AlarmTemperature--;
-
-			delay(TEMP_BUTTON_DELAY);
-		}
-		else if(ReadPulse(START_STOP_ID, START_STOP_BUTTON_THRESHOLD) >= START_STOP_BUTTON_THRESHOLD)
-		{
-			// If the user pressed Start/Stop
-
-			if(AlarmEnabled)
-			{
-				// If the alarm is enabled we disable it and drive buzzer LOW (even if the alarm was not triggered)
-				// Then, we write LCD_ALARM_DISABLED in the display, as alarm enable flag
-
-				digitalWrite(BUZZER_PIN, LOW);
-
-				ClearBlinkingCharacter();
-
-				AlarmEnabled = false;
-			}
-			else
-				AlarmEnabled = true; // If the alarm is not enabled, we'll make it happen
-
-			// And, we store the temperature and the mode in the EEPROM
-			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
-			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
-			eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
-
-			delay(START_STOP_BUTTON_DELAY);
-		}
-		else if(ReadPulse(CHANGE_MODE_ID, CHANGE_MODE_BUTTON_THRESHOLD) >= CHANGE_MODE_BUTTON_THRESHOLD)
-		{
-			// If the user pressed ChangeMode
-
-			AlarmReverse = !AlarmReverse;
-
-			UpdateModeCharacter();
-
-			delay(CHANGE_MODE_BUTTON_DELAY);
-		}
-
-		// Show AlarmTemperature
-
-		LCD.setCursor(7, 0);
-		LCD.print(AlarmTemperature);
-		LCD.print(' ');
-
-		// Show current temperature at sensor
-
-		float Temperature = Sensors.getTempCByIndex(0);
-
-		if(Temperature != DEVICE_DISCONNECTED_C)
-		{
-			LCD.setCursor(6, 1);
-			LCD.print(Temperature, 1);
-			LCD.print("  ");
-		}
-		else
-		{
-			// If the sensor gets disconnected, we'll print it
-
-			LCD.clear();
-			LCD.home();
-			LCD.print("Sensor");
-			LCD.setCursor(4, 1);
-			LCD.print("disconnected");
-
-			while(1);
-		}
-
-		// Do some alarm things (?
+		/*// Do some alarm things (?
 
 		if(AlarmEnabled)
 		{
@@ -172,15 +85,5 @@
 			
 			if(AlarmReverse && Temperature <= AlarmTemperature)
 				digitalWrite(BUZZER_PIN, HIGH);
-		}
-
-		// Perform another reading
-
-		Sensors.requestTemperatures();*/
-	}
-
-	void UpdateModeCharacter()
-	{
-		LCD.setCursor(15, 1);
-		//LCD.print(AlarmReverse ? LCD_REVERSE_ALARM_0 : LCD_REVERSE_ALARM_1);
+		}*/
 	}
