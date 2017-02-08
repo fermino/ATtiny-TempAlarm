@@ -102,19 +102,19 @@
 
 			delay(CHANGE_DIR_BUTTON_DELAY);
 		}
-		else if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp++
-		{
-			// Limit temperature
-			if(TemperatureThreshold < HIGHEST_TEMPERATURE)
-				TemperatureThreshold++;
-
-			delay(TEMP_BUTTON_DELAY);
-		}
 		else if(ReadPulse(TEMP_MINUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp--
 		{
 			// Limit temperature
 			if(TemperatureThreshold > LOWEST_TEMPERATURE)
 				TemperatureThreshold--;
+
+			delay(TEMP_BUTTON_DELAY);
+		}
+		else if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp++
+		{
+			// Limit temperature
+			if(TemperatureThreshold < HIGHEST_TEMPERATURE)
+				TemperatureThreshold++;
 
 			delay(TEMP_BUTTON_DELAY);
 		}
