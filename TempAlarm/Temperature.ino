@@ -21,7 +21,7 @@
 	int8_t TemperatureThreshold;
 
 	bool TemperatureAlarmEnabled = false;
-	bool TemperatureAlarmDirection = 0;
+	byte TemperatureAlarmDirection = 0;
 
 	bool TemperatureAlarmOn = false;
 
@@ -38,24 +38,15 @@
 		// Note: Sensors.requestTemperaturesByIndex(0) uses around 200 more bytes of flash
 		Sensors.requestTemperatures();
 
-		// Get last data from EEPROM
+		// Get last used data from EEPROM
 
 		TemperatureThreshold = eeprom_read_byte(EEPROM_TEMPERATURE_ADDRESS);
-
 		if(TemperatureThreshold < LOWEST_TEMPERATURE || TemperatureThreshold > HIGHEST_TEMPERATURE)
-		{
 			TemperatureThreshold = START_TEMPERATURE;
-			//eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, TemperatureThreshold);
-			// If the user starts the alarm, it will be saved, but if not, 
-		}
 
 		TemperatureAlarmDirection = eeprom_read_byte(EEPROM_DIRECTION_ADDRESS);
-
-		if(TemperatureAlarmDirection != false && TemperatureAlarmDirection != true)
-		{
-			TemperatureAlarmDirection = false;
-			//eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
-		}
+		if(TemperatureAlarmDirection != 0 && TemperatureAlarmDirection != 1)
+			TemperatureAlarmDirection = 0;
 
 		// Setup the timers, this will update the temperature every 1 second
 
