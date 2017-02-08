@@ -1,7 +1,11 @@
+	// EEPROM
+	#include <avr/eeprom.h>
+
 	// DS18B20 (DS18S20 and DS1820 should work too)
 	#include <OneWire.h>
 	#include <DallasTemperature.h>
 
+	// This lib executes a callback every x ms
 	#include <SimpleCallbackTimer.h>
 
 	// OneWire and DallasTemperature
@@ -18,6 +22,8 @@
 
 	bool TemperatureAlarmEnabled = false;
 	bool TemperatureAlarmDirection = 0;
+
+	bool TemperatureAlarmOn = false;
 
 	void InitTemperature()
 	{
@@ -112,33 +118,25 @@
 
 			delay(TEMP_BUTTON_DELAY);
 		}
-		/*else if(ReadPulse(START_STOP_ID, START_STOP_BUTTON_THRESHOLD) >= START_STOP_BUTTON_THRESHOLD) // If the user pressed Start/Stop
+		else if(ReadPulse(START_STOP_ID, START_STOP_BUTTON_THRESHOLD) >= START_STOP_BUTTON_THRESHOLD) // If the user pressed Start/Stop
 		{
-			if(AlarmEnabled)
-			{
-				// If the alarm is enabled we disable it and drive buzzer LOW (even if the alarm was not triggered)
-				// Then, we write LCD_ALARM_DISABLED in the display, as alarm enable flag
+			TemperatureAlarmEnabled = !TemperatureAlarmEnabled;
 
-				digitalWrite(BUZZER_PIN, LOW);
+			TemperatureAlarmOn = false;
 
-				ClearBlinkingCharacter();
-
-				AlarmEnabled = false;
-			}
-			else
-				AlarmEnabled = true; // If the alarm is not enabled, we'll make it happen
-
-			// And, we store the temperature and the mode in the EEPROM
+			// Store the temperature and the direction in the EEPROM
 			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
-			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
-			eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
+			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, TemperatureThreshold);
+			eeprom_update_byte(EEPROM_DIRECTION_ADDRESS, TemperatureAlarmDirection);
 
 			delay(START_STOP_BUTTON_DELAY);
-		}*/
+		}
 
 		// Show TemperatureThreshold
 
-		LCD.setCursor(TemperatureThreshold < 0 ? 7 : 8, 0);
+		LCD.setCursor(7, 0);
+		if(TemperatureThreshold >= 0 && TemperatureThreshold < 100)
+			LCD.print(' ');
 		LCD.print(TemperatureThreshold);
 		LCD.print(' ');
 	}
@@ -157,6 +155,17 @@
 		else
 			LCD.print("-----");
 
+		// If the temperature is above or below the given temperature, activate the alarm
+		if(TemperatureAlarmEnabled)
+		{
+			if(TemperatureAlarmDirection == 1 && Temperature >= TemperatureThreshold)
+				TemperatureAlarmOn = true;
+
+			if(TemperatureAlarmDirection == 0 && Temperature <= TemperatureThreshold);
+				TemperatureAlarmOn = true;
+		}
+
+		// Schedule another conversion
 		Sensors.requestTemperatures();
 	}
 
@@ -178,3 +187,5 @@
 		LCD.print(TemperatureAlarmDirection ? LCD_ALARM_DIRECTION_0 : LCD_ALARM_DIRECTION_1);
 	}
 
+	bool isTemperatureAlarmOn()
+	{ return TemperatureAlarmOn; }

@@ -7,9 +7,6 @@
  * Add DHT22 (environment temperature)
  */
 
-	// EEPROM
-	#include <avr/eeprom.h>
-
 	// LCD
 	#include <TinyWireM.h> // I2C lib
 	#include <LiquidCrystal_I2C.h>
@@ -17,24 +14,15 @@
 	// Using one analog input for read multiple pushbutons
 	#include <OneWireSwitches.h>
 
-	// Countdown timer library
-	#include <KitchenTimer_Countdown.h>
-
 	// Configuration file
 	#include "Configuration.cpp"
 
-	// Objects
+	// LCD library
+	LiquidCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_COLUMNS, LCD_ROWS);
 
-		// LCD library
-		LiquidCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_COLUMNS, LCD_ROWS);
+	// OneWireSwitches
+	OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesR1, SWITCHES_R2, SWITCHES_RESISTOR_TOLERANCE);
 
-		// OneWireSwitches
-		OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesR1, SWITCHES_R2, SWITCHES_RESISTOR_TOLERANCE);
-
-		// Timers
-		KitchenTimer_Countdown Timers[TIMER_AMOUNT];
-
-	uint8_t SelectedTimer = 0;
 	void setup()
 	{
 		// Configure Buzzer Pin
@@ -70,20 +58,5 @@
 	{
 		TemperatureLoop();
 
-		/*// Do some alarm things (?
-
-		if(AlarmEnabled)
-		{
-			// Write some status info in the LCD
-
-			UpdateBlinkingCharacter();
-
-			// If the threshold is obove or below the setted temperature, activate the alarm
-
-			if(!AlarmReverse && Temperature >= AlarmTemperature)
-				digitalWrite(BUZZER_PIN, HIGH);
-			
-			if(AlarmReverse && Temperature <= AlarmTemperature)
-				digitalWrite(BUZZER_PIN, HIGH);
-		}*/
+		digitalWrite(BUZZER_PIN, isTemperatureAlarmOn());
 	}
