@@ -95,18 +95,20 @@
 	{
 		float Temperature = Sensors.getTempCByIndex(0);
 
+		LCD.setCursor(6, 1);
+		
 		if(Temperature != DEVICE_DISCONNECTED_C)
 		{
-			LCD.setCursor(6, 1);
-			LCD.print(Temperature);
-			LCD.print("  ");
+			LCD.print(Temperature, 1);
+			LCD.print(' ');
 		}
+		else
+			LCD.print("-----");
 
 		Sensors.requestTemperatures();
 	}
 
 	uint8_t TemperatureStateCharacter = 1;
-
 	void F_UpdateAlarmStateChar()
 	{
 		LCD.setCursor(15, 0);

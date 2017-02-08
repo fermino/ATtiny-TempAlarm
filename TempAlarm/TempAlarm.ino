@@ -179,23 +179,8 @@
 		Sensors.requestTemperatures();*/
 	}
 
-	// Reads a pulse from a button and returns the time since the press
-	// Returns 0 if the button is not pressed
-	uint16_t ReadPulse(uint8_t KeyIndex, uint16_t Timeout)
-	{
-		uint16_t Time = 0;
-
-		while(Switches.readKey(KeyIndex) == HIGH && Time < Timeout)
-		{
-			Time++;
-			delay(1);
-		}
-
-		return Time;
-	}
-
 	void UpdateModeCharacter()
 	{
 		LCD.setCursor(15, 1);
-		LCD.print(AlarmReverse ? LCD_REVERSE_ALARM_0 : LCD_REVERSE_ALARM_1);
+		//LCD.print(AlarmReverse ? LCD_REVERSE_ALARM_0 : LCD_REVERSE_ALARM_1);
 	}
