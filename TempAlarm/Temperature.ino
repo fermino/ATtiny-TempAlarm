@@ -151,19 +151,19 @@
 		{
 			LCD.print(Temperature, 1);
 			LCD.print(' ');
+
+			// If the temperature is above or below the given temperature, activate the alarm
+			if(TemperatureAlarmEnabled)
+			{
+				if(TemperatureAlarmDirection == 0 && Temperature >= TemperatureThreshold)
+					TemperatureAlarmOn = true;
+
+				if(TemperatureAlarmDirection == 1 && Temperature <= TemperatureThreshold)
+					TemperatureAlarmOn = true;
+			}
 		}
 		else
 			LCD.print("-----");
-
-		// If the temperature is above or below the given temperature, activate the alarm
-		if(TemperatureAlarmEnabled)
-		{
-			if(TemperatureAlarmDirection == 1 && Temperature >= TemperatureThreshold)
-				TemperatureAlarmOn = true;
-
-			if(TemperatureAlarmDirection == 0 && Temperature <= TemperatureThreshold);
-				TemperatureAlarmOn = true;
-		}
 
 		// Schedule another conversion
 		Sensors.requestTemperatures();
@@ -184,7 +184,7 @@
 			LCD.print(LCD_ALARM_DISABLED);
 
 		LCD.setCursor(15, 1);
-		LCD.print(TemperatureAlarmDirection ? LCD_ALARM_DIRECTION_0 : LCD_ALARM_DIRECTION_1);
+		LCD.print(TemperatureAlarmDirection ? LCD_ALARM_DIRECTION_1 : LCD_ALARM_DIRECTION_0);
 	}
 
 	bool isTemperatureAlarmOn()
