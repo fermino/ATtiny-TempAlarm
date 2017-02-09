@@ -5,6 +5,7 @@
  * Software backlight control
  * Calculate remaining time
  * Add DHT22 (environment temperature)
+ * Compile modules only when enabled
  */
 
 	// LCD
@@ -23,6 +24,10 @@
 	// OneWireSwitches
 	OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesR1, SWITCHES_R2, SWITCHES_RESISTOR_TOLERANCE);
 
+	// Including shared variables
+	extern bool TemperatureAlarmOn;
+	extern bool TimerAlarmOn;
+
 	void setup()
 	{
 		// Configure Buzzer Pin
@@ -30,7 +35,6 @@
 
 		// Init LCD
 
-		delay(100);
 		LCD.init();
 
 		#ifdef LCD_BACKLIGHT_ON
@@ -42,12 +46,12 @@
 		// Print some info
 		// Can be commented if you need more flash for improvements
 
-		LCD.home();
+		/*LCD.home();
 		LCD.print(" TempAlarm v0.1");
 		LCD.setCursor(0, 1);
 		LCD.print("  By @fermino");
 
-		delay(LCD_AFTER_WELCOME_DELAY);
+		delay(LCD_AFTER_WELCOME_DELAY);*/
 
 		// Init Modules
 
@@ -58,5 +62,5 @@
 	{
 		TemperatureLoop();
 
-		digitalWrite(BUZZER_PIN, isTemperatureAlarmOn());
+		digitalWrite(BUZZER_PIN, TemperatureAlarmOn || TimerAlarmOn);
 	}

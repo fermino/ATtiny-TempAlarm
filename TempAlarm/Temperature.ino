@@ -13,8 +13,8 @@
 	DallasTemperature Sensors(&OneWireBus);
 
 	// Timers
-	SimpleCallbackTimer T_UpdateTemperature;
-	SimpleCallbackTimer T_UpdateAlarmStatus;
+	SimpleCallbackTimer T_UpdateTemperature(500, F_UpdateTemperature);
+	SimpleCallbackTimer T_UpdateAlarmStatus(BLINKING_CHARACTER_DELAY, F_UpdateAlarmStatus);
 
 	// Other variables
 
@@ -48,17 +48,11 @@
 		if(TemperatureAlarmDirection != 0 && TemperatureAlarmDirection != 1)
 			TemperatureAlarmDirection = 0;
 
-		// Setup the timers, this will update the temperature every 1 second
-
-		T_UpdateTemperature.setCallback(F_UpdateTemperature);
-		T_UpdateTemperature.setInterval(500);
-		T_UpdateTemperature.start(true);
+		// Start the timers, this will update the temperature every 1 second
+		T_UpdateTemperature.start();
 
 		// This, will update the character that indicates if the alarm is enabled or not
-
-		T_UpdateAlarmStatus.setCallback(F_UpdateAlarmStatus);
-		T_UpdateAlarmStatus.setInterval(BLINKING_CHARACTER_DELAY);
-		T_UpdateAlarmStatus.start(true);
+		T_UpdateAlarmStatus.start();
 	}
 
 	void PrintTemperatureTemplate()
@@ -144,14 +138,8 @@
 			LCD.print(' ');
 
 			// If the temperature is above or below the given temperature, activate the alarm
-			if(TemperatureAlarmEnabled)
-			{
-				if(TemperatureAlarmDirection == 0 && Temperature >= TemperatureThreshold)
-					TemperatureAlarmOn = true;
-
-				if(TemperatureAlarmDirection == 1 && Temperature <= TemperatureThreshold)
-					TemperatureAlarmOn = true;
-			}
+			if(TemperatureAlarmEnabled && ((TemperatureAlarmDirection == 0 && Temperature >= TemperatureThreshold) || (TemperatureAlarmDirection == 1 && Temperature <= TemperatureThreshold)))
+				TemperatureAlarmOn = true;
 		}
 		else
 			LCD.print("-----");
@@ -177,6 +165,3 @@
 		LCD.setCursor(15, 1);
 		LCD.print(TemperatureAlarmDirection ? LCD_TEMP_ALARM_DIRECTION_1 : LCD_TEMP_ALARM_DIRECTION_0);
 	}
-
-	bool isTemperatureAlarmOn()
-	{ return TemperatureAlarmOn; }

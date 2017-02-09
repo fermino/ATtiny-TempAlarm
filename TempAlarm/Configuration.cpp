@@ -154,5 +154,14 @@
 		#define BLINKING_CHARACTER_DELAY 500
 
 	/**
+	 * MODULE: Timer
+	 * 
+	 * 
+	 */
+
+		// This will be modified by software according to the available space on the LCD
+		#define MAX_TIMERS 2
+
+	/**
 	 * END CONFIG
 	 */
