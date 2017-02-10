@@ -51,16 +51,16 @@
 	 * DELAY: Time (ms) to wait after the press without reading any button. 
 	 */
 
-		#define TEMP_CHANGE_DIR_ID 0
+		#define TEMP_CHANGE_DIR_BUTTON_ID 0
 		#define TEMP_CHANGE_DIR_BUTTON_THRESHOLD 25
 		#define TEMP_CHANGE_DIR_BUTTON_DELAY 500
 		
-		#define TEMP_MINUS_ID 1
-		#define TEMP_PLUS_ID 2
+		#define TEMP_MINUS_BUTTON_ID 1
+		#define TEMP_PLUS_BUTTON_ID 2
 		#define TEMP_BUTTON_THRESHOLD 25
 		#define TEMP_BUTTON_DELAY 50
 
-		#define TEMP_START_STOP_ID 3
+		#define TEMP_START_STOP_BUTTON_ID 3
 		#define TEMP_START_STOP_BUTTON_DELAY 500
 		#define TEMP_START_STOP_BUTTON_THRESHOLD 25
 

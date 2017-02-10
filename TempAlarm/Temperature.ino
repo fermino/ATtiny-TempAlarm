@@ -83,13 +83,13 @@
 		// ReadPulse should not return anything higher than Timeout, but well, using >= instead ==
 		// has no effect over flash/memory usage, so, it can avoid further problems if code gets changed
 
-		if(ReadPulse(TEMP_CHANGE_DIR_ID, TEMP_CHANGE_DIR_BUTTON_THRESHOLD) >= TEMP_CHANGE_DIR_BUTTON_THRESHOLD) // If the user pressed ChangeDir
+		if(ReadPulse(TEMP_CHANGE_DIR_BUTTON_ID, TEMP_CHANGE_DIR_BUTTON_THRESHOLD) >= TEMP_CHANGE_DIR_BUTTON_THRESHOLD) // If the user pressed ChangeDir
 		{
 			TemperatureAlarmDirection = !TemperatureAlarmDirection;
 
 			delay(TEMP_CHANGE_DIR_BUTTON_DELAY);
 		}
-		else if(ReadPulse(TEMP_MINUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp--
+		else if(ReadPulse(TEMP_MINUS_BUTTON_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp--
 		{
 			// Limit temperature
 			if(TemperatureThreshold > TEMP_LOWEST_THRESHOLD)
@@ -97,7 +97,7 @@
 
 			delay(TEMP_BUTTON_DELAY);
 		}
-		else if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp++
+		else if(ReadPulse(TEMP_PLUS_BUTTON_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp++
 		{
 			// Limit temperature
 			if(TemperatureThreshold < TEMP_HIGHEST_THRESHOLD)
@@ -105,7 +105,7 @@
 
 			delay(TEMP_BUTTON_DELAY);
 		}
-		else if(ReadPulse(TEMP_START_STOP_ID, TEMP_START_STOP_BUTTON_THRESHOLD) >= TEMP_START_STOP_BUTTON_THRESHOLD) // If the user pressed Start/Stop
+		else if(ReadPulse(TEMP_START_STOP_BUTTON_ID, TEMP_START_STOP_BUTTON_THRESHOLD) >= TEMP_START_STOP_BUTTON_THRESHOLD) // If the user pressed Start/Stop
 		{
 			TemperatureAlarmEnabled = !TemperatureAlarmEnabled;
 
