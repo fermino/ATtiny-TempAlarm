@@ -1,19 +1,26 @@
-	// EEPROM
+/**
+ * Thanks for helping me to optimize the code (more then 1.3K flash saved!) to
+ * 
+ * https://edwardmallon.wordpress.com/2014/03/12/using-a-ds18b20-temp-sensor-without-a-dedicated-library/
+ * http://bildr.org/2011/07/ds18b20-arduino/
+ */
+
+	// Using this instead of Arduino's make the code lighter
 	#include <avr/eeprom.h>
 
-	// DS18B20 (DS18S20 and DS1820 should work too)
+	// OneWire library from PJRC
 	#include <OneWire.h>
-	#include <DallasTemperature.h>
 
 	// This lib executes a callback every x ms
 	#include <SimpleCallbackTimer.h>
 
-	// OneWire and DallasTemperature
+	// OneWire and other sensor related variables
 	OneWire OneWireBus(ONE_WIRE_BUS);
-	DallasTemperature Sensors(&OneWireBus);
+	byte TemperatureSensorAddress[8];
 
 	// Timers
-	SimpleCallbackTimer T_UpdateTemperature(500, F_UpdateTemperature);
+	// The temperature conversion takes about 750ms, so, I think this is pretty reasonable
+	SimpleCallbackTimer T_UpdateTemperature(775, F_UpdateTemperature);
 	SimpleCallbackTimer T_UpdateAlarmStatus(BLINKING_CHARACTER_DELAY, F_UpdateAlarmStatus);
 
 	// Other variables
@@ -30,13 +37,8 @@
 		// Print the template in the LCD
 		PrintTemperatureTemplate();
 
-		// Init the OneWire bus and DallasTemperature
-		Sensors.begin();
-		// We need to perform other things while the sensor making the conversion
-		Sensors.setWaitForConversion(false);
-		// Start a conversion, we want to have a stable value as soon as possible
-		// Note: Sensors.requestTemperaturesByIndex(0) uses around 200 more bytes of flash
-		Sensors.requestTemperatures();
+		// Init the OneWire bus and find the sensor's address
+		OneWireBus.search(TemperatureSensorAddress);
 
 		// Get last used data from EEPROM
 
@@ -128,12 +130,27 @@
 
 	void F_UpdateTemperature()
 	{
-		float Temperature = Sensors.getTempCByIndex(0);
-
 		LCD.setCursor(6, 1);
-		
-		if(Temperature != DEVICE_DISCONNECTED_C)
+
+		// If the found (or not) address is a recognized one
+		if(TemperatureSensorAddress[0] == 0x10 || TemperatureSensorAddress[0] == 0x28)
 		{
+			// This reads the temperature from the scratchpad (sensor's memory)
+			OneWireBus.reset();
+			OneWireBus.select(TemperatureSensorAddress);
+			OneWireBus.write(0xBE); // Read Scratchpad [BEh] command
+
+			// Read and process the temperature
+			byte LSB = OneWireBus.read();
+			float Temperature = ((OneWireBus.read() << 8) | LSB);
+			Temperature = Temperature / 16;
+
+			// Start another conversion; will be used in the next function call
+			OneWireBus.reset();
+			OneWireBus.select(TemperatureSensorAddress);
+			OneWireBus.write(0x44); // Convert T [44h] command
+
+			// Print it :P
 			LCD.print(Temperature, 1);
 			LCD.print(' ');
 
@@ -143,9 +160,6 @@
 		}
 		else
 			LCD.print("-----");
-
-		// Schedule another conversion
-		Sensors.requestTemperatures();
 	}
 
 	uint8_t TemperatureStateCharacter = 1;
