@@ -21,7 +21,7 @@
 	// Timers
 	// The temperature conversion takes about 750ms, so, I think this is pretty reasonable
 	SimpleCallbackTimer T_UpdateTemperature(775, F_UpdateTemperature);
-	SimpleCallbackTimer T_UpdateAlarmStatus(BLINKING_CHARACTER_DELAY, F_UpdateAlarmStatus);
+	SimpleCallbackTimer T_UpdateTemperatureAlarmStatus(BLINKING_CHARACTER_DELAY, F_UpdateTemperatureAlarmStatus);
 
 	// Other variables
 
@@ -54,7 +54,7 @@
 		T_UpdateTemperature.start();
 
 		// This, will update the character that indicates if the alarm is enabled or not
-		T_UpdateAlarmStatus.start();
+		T_UpdateTemperatureAlarmStatus.start();
 	}
 
 	void PrintTemperatureTemplate()
@@ -78,7 +78,7 @@
 	void TemperatureLoop()
 	{
 		T_UpdateTemperature.run();
-		T_UpdateAlarmStatus.run();
+		T_UpdateTemperatureAlarmStatus.run();
 
 		// ReadPulse should not return anything higher than Timeout, but well, using >= instead ==
 		// has no effect over flash/memory usage, so, it can avoid further problems if code gets changed
@@ -163,7 +163,7 @@
 	}
 
 	uint8_t TemperatureStateCharacter = 1;
-	void F_UpdateAlarmStatus()
+	void F_UpdateTemperatureAlarmStatus()
 	{
 		LCD.setCursor(15, 0);
 		
