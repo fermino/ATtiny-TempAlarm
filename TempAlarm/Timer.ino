@@ -6,12 +6,14 @@
 
 	// This is the desired amount of timers enabled
 	#define _TIMERS (MAX_TIMERS < LCD_ROWS - 2 ? MAX_TIMERS : LCD_ROWS - 2)
+	const uint8_t _Timers = _TIMERS;
 	
 	// Those timers
 	KitchenTimer_Countdown KitchenTimers[_TIMERS];
+	uint8_t SelectedTimer = 0;
 
 	// Internal timers
-	SimpleCallbackTimer T_UpdateTimerStatus(1000, F_UpdateTimerStatus);
+	SimpleCallbackTimer T_UpdateTimerAlarmStatus(1000, F_UpdateTimerAlarmStatus);
 
 	// Other variables
 
@@ -22,7 +24,7 @@
 		PrintTimerTemplate();
 
 		// This timer will update the data of the kitchen timers on the screen
-		T_UpdateTimerStatus.start();
+		T_UpdateTimerAlarmStatus.start();
 	}
 
 	void PrintTimerTemplate()
@@ -40,19 +42,22 @@
 
 	void TimerLoop()
 	{
-		T_UpdateTimerStatus.run();
+		T_UpdateTimerAlarmStatus.run();
 	}
 
-	void F_UpdateTimerStatus()
+	void F_UpdateTimerAlarmStatus()
 	{
-		for(int i = 2; i - 2 < _TIMERS; i++)
+		for(uint8_t i = 0; i < _Timers; i++)
 		{
-			LCD.setCursor(2, i);
-			PrintZerofill(KitchenTimers[i - 2].getRemainingHours());
-			LCD.setCursor(5, i);
-			PrintZerofill(KitchenTimers[i - 2].getRemainingMinutes());
-			LCD.setCursor(8, i);
-			PrintZerofill(KitchenTimers[i - 2].getRemainingSeconds());
+			LCD.setCursor(0, i + 2);
+			LCD.print(i == SelectedTimer ? '>' : ' ');
+
+			LCD.setCursor(2, i + 2);
+			PrintZerofill(KitchenTimers[i].getRemainingHours());
+			LCD.setCursor(5, i + 2);
+			PrintZerofill(KitchenTimers[i].getRemainingMinutes());
+			LCD.setCursor(8, i + 2);
+			PrintZerofill(KitchenTimers[i].getRemainingSeconds());
 		}
 	}
 
