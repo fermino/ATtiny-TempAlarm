@@ -43,10 +43,30 @@
 		#define LCD_DEGREE_CHAR (char) 223
 
 		#define LCD_TIMER_STOPWATCH_CLOCK_CHAR_INDEX 0
-		const uint8_t LCD_Timer_StopwatchClockChar[] {0b00000, 0xe, 0x15, 0x17, 0x11, 0xe, 0b00000};
+		const uint8_t LCD_Timer_StopwatchClockChar[]
+		{
+			0b01110,
+			0b00100,
+			0b01110,
+			0b10011,
+			0b10101,
+			0b10001,
+			0b01110,
+			0b00000
+		};
 
 		#define LCD_TIMER_COUNTDOWN_CLOCK_CHAR_INDEX 1
-		const uint8_t LCD_Timer_CountdownClockChar[] {0b00000, 0b10001, 0b01110, 0b10011, 0b10101, 0b10001, 0b01110, 0b10001};
+		const uint8_t LCD_Timer_CountdownClockChar[]
+		{
+			0b11111,
+			0b10001,
+			0b01010,
+			0b00100,
+			0b01010,
+			0b10001,
+			0b11111,
+			0b00000
+		};
 
 		#define LCD_TIMER_ENABLED_CHAR ' '
 		#define LCD_TIMER_FINISHED_CHAR '!'

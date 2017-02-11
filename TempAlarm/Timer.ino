@@ -73,9 +73,6 @@
 			if(Pulse >= TIMER_CONTROL_RESET_BUTTON_THRESHOLD)
 			{
 				KitchenTimers[SelectedTimer].reset();
-
-				F_UpdateTimerAlarmStatus();
-				
 				delay(TIMER_CONTROL_RESET_BUTTON_DELAY);
 			}
 			else if(Pulse >= TIMER_CONTROL_SWITCH_BUTTON_THRESHOLD)
@@ -92,11 +89,19 @@
 			else if(Pulse >= TIMER_CONTROL_START_STOP_BUTTON_THRESHOLD)
 			{
 				KitchenTimers[SelectedTimer].toggle();
-
-				F_UpdateTimerAlarmStatus();
-
 				delay(TIMER_CONTROL_START_STOP_BUTTON_DELAY);
 			}
+		}
+
+		for(uint8_t i = 0; i < _Timers; i++)
+		{
+			// Print time
+			LCD.setCursor(2, i + 2);
+			PrintZerofill(KitchenTimers[i].getHours());
+			LCD.setCursor(5, i + 2);
+			PrintZerofill(KitchenTimers[i].getMinutes());
+			LCD.setCursor(8, i + 2);
+			PrintZerofill(KitchenTimers[i].getSeconds());
 		}
 	}
 
@@ -108,14 +113,6 @@
 
 		for(uint8_t i = 0; i < _Timers; i++)
 		{
-			// Print time
-			LCD.setCursor(2, i + 2);
-			PrintZerofill(KitchenTimers[i].getHours());
-			LCD.setCursor(5, i + 2);
-			PrintZerofill(KitchenTimers[i].getMinutes());
-			LCD.setCursor(8, i + 2);
-			PrintZerofill(KitchenTimers[i].getSeconds());
-
 			// Print timer status
 			LCD.setCursor(11, i + 2);
 
