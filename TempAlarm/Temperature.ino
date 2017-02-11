@@ -132,24 +132,31 @@
 	{
 		LCD.setCursor(6, 1);
 
+		float Temperature = NULL;
+
 		// If the found (or not) address is a recognized one
 		if(TemperatureSensorAddress[0] == 0x10 || TemperatureSensorAddress[0] == 0x28)
 		{
-			// This reads the temperature from the scratchpad (sensor's memory)
-			OneWireBus.reset();
-			OneWireBus.select(TemperatureSensorAddress);
-			OneWireBus.write(0xBE); // Read Scratchpad [BEh] command
+			if(OneWireBus.reset())
+			{
+				// This reads the temperature from the scratchpad (sensor's memory)
+				OneWireBus.select(TemperatureSensorAddress);
+				OneWireBus.write(0xBE); // Read Scratchpad [BEh] command
 
-			// Read and process the temperature
-			byte LSB = OneWireBus.read();
-			float Temperature = ((OneWireBus.read() << 8) | LSB);
-			Temperature = Temperature / 16;
+				// Read and process the temperature
+				byte LSB = OneWireBus.read();
+				Temperature = ((OneWireBus.read() << 8) | LSB);
+				Temperature = Temperature / 16;
 
-			// Start another conversion; will be used in the next function call
-			OneWireBus.reset();
-			OneWireBus.select(TemperatureSensorAddress);
-			OneWireBus.write(0x44); // Convert T [44h] command
+				// Start another conversion; will be used in the next function call
+				OneWireBus.reset();
+				OneWireBus.select(TemperatureSensorAddress);
+				OneWireBus.write(0x44); // Convert T [44h] command
+			}
+		}
 
+		if(Temperature != NULL)
+		{
 			// Print it :P
 			LCD.print(Temperature, 1);
 			LCD.print(' ');
