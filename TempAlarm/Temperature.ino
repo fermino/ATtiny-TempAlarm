@@ -73,6 +73,8 @@
 		LCD.setCursor(12, 1);
 		LCD.print(LCD_DEGREE_CHAR);
 		LCD.print('C');
+
+		UpdateTemperatureAlarmDirectionChar();
 	}
 
 	void TemperatureLoop()
@@ -87,8 +89,7 @@
 		{
 			TemperatureAlarmDirection = !TemperatureAlarmDirection;
 
-			LCD.setCursor(15, 1);
-			LCD.print(TemperatureAlarmDirection ? LCD_TEMP_ALARM_DIRECTION_1 : LCD_TEMP_ALARM_DIRECTION_0);
+			UpdateTemperatureAlarmDirectionChar();
 
 			delay(TEMP_CHANGE_DIR_BUTTON_DELAY);
 		}
@@ -185,4 +186,10 @@
 		}
 		else
 			LCD.print(LCD_ALARM_DISABLED);
+	}
+
+	void UpdateTemperatureAlarmDirectionChar()
+	{
+		LCD.setCursor(15, 1);
+		LCD.print(TemperatureAlarmDirection ? LCD_TEMP_ALARM_DIRECTION_1 : LCD_TEMP_ALARM_DIRECTION_0);
 	}
