@@ -43,6 +43,8 @@
 			LCD.setCursor(7, i);
 			LCD.print(':');
 		}
+
+		UpdateTimerSelector();
 	}
 
 	void TimerLoop()
@@ -83,11 +85,7 @@
 				else
 					SelectedTimer = 0;
 
-				for(uint8_t i = 0; i < _Timers; i++)
-				{
-					LCD.setCursor(0, i + 2);
-					LCD.print(i == SelectedTimer ? '>' : ' ');
-				}
+				UpdateTimerSelector();
 
 				delay(TIMER_CONTROL_SWITCH_BUTTON_DELAY);
 			}
@@ -143,6 +141,15 @@
 			}
 			else
 				LCD.write(KitchenTimers[i].getCurrentMode());
+		}
+	}
+
+	void UpdateTimerSelector()
+	{
+		for(uint8_t i = 0; i < _Timers; i++)
+		{
+			LCD.setCursor(0, i + 2);
+			LCD.print(i == SelectedTimer ? '>' : ' ');
 		}
 	}
 
