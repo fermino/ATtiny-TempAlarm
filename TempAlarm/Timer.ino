@@ -83,7 +83,11 @@
 				else
 					SelectedTimer = 0;
 
-				F_UpdateTimerAlarmStatus();
+				for(uint8_t i = 0; i < _Timers; i++)
+				{
+					LCD.setCursor(0, i + 2);
+					LCD.print(i == SelectedTimer ? '>' : ' ');
+				}
 
 				delay(TIMER_CONTROL_SWITCH_BUTTON_DELAY);
 			}
@@ -96,19 +100,6 @@
 				delay(TIMER_CONTROL_START_STOP_BUTTON_DELAY);
 			}
 		}
-
-		for(uint8_t i = 0; i < _Timers; i++)
-		{
-			LCD.setCursor(0, i + 2);
-			LCD.print(i == SelectedTimer ? '>' : ' ');
-
-			LCD.setCursor(2, i + 2);
-			PrintZerofill(KitchenTimers[i].getHours());
-			LCD.setCursor(5, i + 2);
-			PrintZerofill(KitchenTimers[i].getMinutes());
-			LCD.setCursor(8, i + 2);
-			PrintZerofill(KitchenTimers[i].getSeconds());
-		}
 	}
 
 	void F_UpdateTimerAlarmStatus()
@@ -119,6 +110,15 @@
 
 		for(uint8_t i = 0; i < _Timers; i++)
 		{
+			// Print time
+			LCD.setCursor(2, i + 2);
+			PrintZerofill(KitchenTimers[i].getHours());
+			LCD.setCursor(5, i + 2);
+			PrintZerofill(KitchenTimers[i].getMinutes());
+			LCD.setCursor(8, i + 2);
+			PrintZerofill(KitchenTimers[i].getSeconds());
+
+			// Print timer status
 			LCD.setCursor(11, i + 2);
 
 			if(KitchenTimers[i].hasFinished())
