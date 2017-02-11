@@ -59,9 +59,6 @@
 
 	void PrintTemperatureTemplate()
 	{
-		ClearLCDRow(0);
-		ClearLCDRow(1);
-
 		LCD.setCursor(0, 0);
 		LCD.print("Alarm: ");
 		LCD.setCursor(12, 0);

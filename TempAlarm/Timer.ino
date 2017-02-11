@@ -36,8 +36,6 @@
 	{
 		for(int i = 2; i - 2 < _TIMERS; i++)
 		{
-			ClearLCDRow(i);
-
 			LCD.setCursor(4, i);
 			LCD.print(':');
 			LCD.setCursor(7, i);
