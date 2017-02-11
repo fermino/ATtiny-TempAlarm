@@ -29,6 +29,9 @@
 		#define LCD_COLUMNS 20
 		#define LCD_ROWS 4
 
+		// Comment it to disable
+		#define LCD_BACKLIGHT_ON
+
 		#define LCD_ALARM_ENABLED_0 '!'
 		#define LCD_ALARM_ENABLED_1 (char) 255 // a character full of black dots C:
 
@@ -39,8 +42,14 @@
 
 		#define LCD_DEGREE_CHAR (char) 223
 
-		// Comment it to disable
-		#define LCD_BACKLIGHT_ON
+		#define LCD_TIMER_STOPWATCH_CLOCK_CHAR_INDEX 0
+		const uint8_t LCD_Timer_StopwatchClockChar[] {0b00000, 0xe, 0x15, 0x17, 0x11, 0xe, 0b00000};
+
+		#define LCD_TIMER_COUNTDOWN_CLOCK_CHAR_INDEX 1
+		const uint8_t LCD_Timer_CountdownClockChar[] {0b00000, 0b10001, 0b01110, 0b10011, 0b10101, 0b10001, 0b01110, 0b10001};
+
+		#define LCD_TIMER_ENABLED_CHAR ' '
+		#define LCD_TIMER_FINISHED_CHAR '!'
 
 	/**
 	 * Switches
@@ -72,7 +81,6 @@
 
 		// This switch has multiple functions
 		#define TIMER_CONTROL_BUTTON_ID 7
-		#define TIMER_CONTROL_BUTTON_MAX_THRESHOLD 500
 
 		#define TIMER_CONTROL_RESET_BUTTON_THRESHOLD 500
 		#define TIMER_CONTROL_RESET_BUTTON_DELAY 500
@@ -82,6 +90,9 @@
 
 		#define TIMER_CONTROL_START_STOP_BUTTON_THRESHOLD 50
 		#define TIMER_CONTROL_START_STOP_BUTTON_DELAY 50
+
+		// This must match the previous settings
+		#define TIMER_CONTROL_BUTTON_MAX_THRESHOLD 500
 
 	/**
 	 * OneWireSwitches configuration

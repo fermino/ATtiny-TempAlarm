@@ -1,5 +1,5 @@
 	// This lib executes a callback every x ms
-	//#include <SimpleCallbackTimer.h>
+	#include <SimpleCallbackTimer.h>
 
 	// A set of timer utilities for the kitchen :P
 	#include <KitchenTimer.h>
@@ -10,10 +10,12 @@
 	
 	// Those timers
 	KitchenTimer KitchenTimers[_TIMERS];
+	uint8_t TimerStateCharacters[_TIMERS];
+
 	uint8_t SelectedTimer = 0;
 
 	// Internal timers
-	//SimpleCallbackTimer T_UpdateTimerAlarmStatus(1000, F_UpdateTimerAlarmStatus);
+	SimpleCallbackTimer T_UpdateTimerAlarmStatus(500, F_UpdateTimerAlarmStatus);
 
 	// Other variables
 
@@ -21,10 +23,13 @@
 
 	void InitTimer()
 	{
+		LCD.createChar(LCD_TIMER_STOPWATCH_CLOCK_CHAR_INDEX, LCD_Timer_StopwatchClockChar);
+		LCD.createChar(LCD_TIMER_COUNTDOWN_CLOCK_CHAR_INDEX, LCD_Timer_CountdownClockChar);
+		
 		PrintTimerTemplate();
 
 		// This timer will update the data of the kitchen timers on the screen
-		//T_UpdateTimerAlarmStatus.start();
+		T_UpdateTimerAlarmStatus.start();
 	}
 
 	void PrintTimerTemplate()
@@ -42,7 +47,7 @@
 
 	void TimerLoop()
 	{
-		//T_UpdateTimerAlarmStatus.run();
+		T_UpdateTimerAlarmStatus.run();
 
 		if(ReadPulse(TIMER_ADD_HOUR_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD && KitchenTimers[SelectedTimer].getTime() <= TIMER_LIMIT - 3600)
 		{
@@ -66,6 +71,9 @@
 			if(Pulse >= TIMER_CONTROL_RESET_BUTTON_THRESHOLD)
 			{
 				KitchenTimers[SelectedTimer].reset();
+
+				F_UpdateTimerAlarmStatus();
+				
 				delay(TIMER_CONTROL_RESET_BUTTON_DELAY);
 			}
 			else if(Pulse >= TIMER_CONTROL_SWITCH_BUTTON_THRESHOLD)
@@ -75,21 +83,20 @@
 				else
 					SelectedTimer = 0;
 
+				F_UpdateTimerAlarmStatus();
+
 				delay(TIMER_CONTROL_SWITCH_BUTTON_DELAY);
 			}
 			else if(Pulse >= TIMER_CONTROL_START_STOP_BUTTON_THRESHOLD)
 			{
 				KitchenTimers[SelectedTimer].toggle();
 
+				F_UpdateTimerAlarmStatus();
+
 				delay(TIMER_CONTROL_START_STOP_BUTTON_DELAY);
 			}
 		}
 
-		UpdateTimerAlarmStatus();
-	}
-
-	void UpdateTimerAlarmStatus()
-	{
 		for(uint8_t i = 0; i < _Timers; i++)
 		{
 			LCD.setCursor(0, i + 2);
@@ -101,6 +108,41 @@
 			PrintZerofill(KitchenTimers[i].getMinutes());
 			LCD.setCursor(8, i + 2);
 			PrintZerofill(KitchenTimers[i].getSeconds());
+		}
+	}
+
+	void F_UpdateTimerAlarmStatus()
+	{
+		// Here we turn the alarm off
+		// If any timer hasFinished(), we'll enable it again
+		TimerAlarmOn = false;
+
+		for(uint8_t i = 0; i < _Timers; i++)
+		{
+			LCD.setCursor(11, i + 2);
+
+			if(KitchenTimers[i].hasFinished())
+			{
+				if(TimerStateCharacters[i])
+					LCD.print(LCD_TIMER_FINISHED_CHAR);
+				else
+					LCD.write(KitchenTimers[i].getCurrentMode()); // Just a trick, char's index must match every timer mode
+
+				TimerStateCharacters[i] = !TimerStateCharacters[i];
+
+				TimerAlarmOn = true;
+			}
+			else if(KitchenTimers[i].isStarted())
+			{
+				if(TimerStateCharacters[i])
+					LCD.print(LCD_TIMER_ENABLED_CHAR);
+				else
+					LCD.write(KitchenTimers[i].getCurrentMode());
+
+				TimerStateCharacters[i] = !TimerStateCharacters[i];
+			}
+			else
+				LCD.write(KitchenTimers[i].getCurrentMode());
 		}
 	}
 
