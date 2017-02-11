@@ -56,11 +56,13 @@
 		// Init Modules
 
 		InitTemperature();
+		InitTimer();
 	}
 
 	void loop()
 	{
 		TemperatureLoop();
+		TimerLoop();
 
 		digitalWrite(BUZZER_PIN, TemperatureAlarmOn || TimerAlarmOn);
 	}

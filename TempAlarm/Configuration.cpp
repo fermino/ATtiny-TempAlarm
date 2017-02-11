@@ -61,8 +61,27 @@
 		#define TEMP_BUTTON_DELAY 50
 
 		#define TEMP_START_STOP_BUTTON_ID 3
-		#define TEMP_START_STOP_BUTTON_DELAY 500
 		#define TEMP_START_STOP_BUTTON_THRESHOLD 25
+		#define TEMP_START_STOP_BUTTON_DELAY 500
+
+		#define TIMER_ADD_HOUR_BUTTON_ID 4
+		#define TIMER_ADD_MINUTE_BUTTON_ID 5
+		#define TIMER_ADD_SECOND_BUTTON_ID 6
+		#define TIMER_ADD_BUTTON_THRESHOLD 30
+		#define TIMER_ADD_BUTTON_DELAY 30
+
+		// This switch has multiple functions
+		#define TIMER_CONTROL_BUTTON_ID 7
+		#define TIMER_CONTROL_BUTTON_MAX_THRESHOLD 500
+
+		#define TIMER_CONTROL_RESET_BUTTON_THRESHOLD 500
+		#define TIMER_CONTROL_RESET_BUTTON_DELAY 500
+
+		#define TIMER_CONTROL_SWITCH_BUTTON_THRESHOLD 250
+		#define TIMER_CONTROL_SWITCH_BUTTON_DELAY 250
+
+		#define TIMER_CONTROL_START_STOP_BUTTON_THRESHOLD 50
+		#define TIMER_CONTROL_START_STOP_BUTTON_DELAY 50
 
 	/**
 	 * OneWireSwitches configuration
@@ -161,6 +180,9 @@
 
 		// This will be modified by software according to the available space on the LCD
 		#define MAX_TIMERS 2
+
+		// The time limit for a countdown timer, in seconds: 99:59:59 => 359999
+		#define TIMER_LIMIT 359999
 
 	/**
 	 * END CONFIG
