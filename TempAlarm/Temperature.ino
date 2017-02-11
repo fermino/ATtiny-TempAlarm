@@ -87,6 +87,9 @@
 		{
 			TemperatureAlarmDirection = !TemperatureAlarmDirection;
 
+			LCD.setCursor(15, 1);
+			LCD.print(TemperatureAlarmDirection ? LCD_TEMP_ALARM_DIRECTION_1 : LCD_TEMP_ALARM_DIRECTION_0);
+
 			delay(TEMP_CHANGE_DIR_BUTTON_DELAY);
 		}
 		else if(ReadPulse(TEMP_MINUS_BUTTON_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD) // If the user pressed Temp--
@@ -182,7 +185,4 @@
 		}
 		else
 			LCD.print(LCD_ALARM_DISABLED);
-
-		LCD.setCursor(15, 1);
-		LCD.print(TemperatureAlarmDirection ? LCD_TEMP_ALARM_DIRECTION_1 : LCD_TEMP_ALARM_DIRECTION_0);
 	}
