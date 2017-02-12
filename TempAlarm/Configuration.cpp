@@ -216,5 +216,14 @@
 		#define TIMER_LIMIT 359999
 
 	/**
+	 * MODULE: RTC
+	 * 
+	 * 
+	 */
+
+		//#define RTC_HW DS3231
+		#define RTC_I2C_ADDRESS 0x68
+
+	/**
 	 * END CONFIG
 	 */

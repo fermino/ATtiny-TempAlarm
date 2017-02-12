@@ -56,13 +56,16 @@
 		// Init Modules
 
 		InitTemperature();
+		// Only compile theese if LCD_ROWS > 2 / LCD_ROWS >= 4
 		InitTimer();
+		InitRTC();
 	}
 
 	void loop()
 	{
 		TemperatureLoop();
 		TimerLoop();
+		RTCLoop();
 
 		digitalWrite(BUZZER_PIN, TemperatureAlarmOn || TimerAlarmOn);
 	}
