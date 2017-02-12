@@ -26,3 +26,11 @@
 		for(int i = LCD_COLUMNS; i > 0; i--)
 			LCD.print(' ');
 	}*/
+
+	void PrintZerofill(uint8_t Number)
+	{
+		if(Number < 10)
+			LCD.print('0');
+
+		LCD.print(Number);
+	}

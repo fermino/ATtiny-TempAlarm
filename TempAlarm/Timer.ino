@@ -36,9 +36,9 @@
 	{
 		for(int i = 2; i - 2 < _TIMERS; i++)
 		{
-			LCD.setCursor(4, i);
+			LCD.setCursor(5, i);
 			LCD.print(':');
-			LCD.setCursor(7, i);
+			LCD.setCursor(8, i);
 			LCD.print(':');
 		}
 
@@ -94,11 +94,11 @@
 		for(uint8_t i = 0; i < _Timers; i++)
 		{
 			// Print time
-			LCD.setCursor(2, i + 2);
+			LCD.setCursor(3, i + 2);
 			PrintZerofill(KitchenTimers[i].getHours());
-			LCD.setCursor(5, i + 2);
+			LCD.setCursor(6, i + 2);
 			PrintZerofill(KitchenTimers[i].getMinutes());
-			LCD.setCursor(8, i + 2);
+			LCD.setCursor(9, i + 2);
 			PrintZerofill(KitchenTimers[i].getSeconds());
 		}
 	}
@@ -112,7 +112,7 @@
 		for(uint8_t i = 0; i < _Timers; i++)
 		{
 			// Print timer status
-			LCD.setCursor(11, i + 2);
+			LCD.setCursor(0, i + 2);
 
 			if(KitchenTimers[i].hasFinished())
 			{
@@ -143,15 +143,7 @@
 	{
 		for(uint8_t i = 0; i < _Timers; i++)
 		{
-			LCD.setCursor(0, i + 2);
+			LCD.setCursor(1, i + 2);
 			LCD.print(i == SelectedTimer ? '>' : ' ');
 		}
-	}
-
-	void PrintZerofill(uint8_t Number)
-	{
-		if(Number < 10)
-			LCD.print('0');
-
-		LCD.print(Number);
 	}
