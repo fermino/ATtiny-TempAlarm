@@ -6,7 +6,6 @@
 
 	// This is the desired amount of timers enabled
 	#define _TIMERS (MAX_TIMERS < LCD_ROWS - 2 ? MAX_TIMERS : LCD_ROWS - 2)
-	const uint8_t _Timers = _TIMERS;
 	
 	// Those timers
 	KitchenTimer KitchenTimers[_TIMERS];
@@ -75,7 +74,7 @@
 			}
 			else if(Pulse >= TIMER_CONTROL_SWITCH_BUTTON_THRESHOLD)
 			{
-				if(SelectedTimer < _Timers - 1)
+				if(SelectedTimer < _TIMERS - 1)
 					SelectedTimer++;
 				else
 					SelectedTimer = 0;
@@ -91,7 +90,7 @@
 			}
 		}
 
-		for(uint8_t i = 0; i < _Timers; i++)
+		for(uint8_t i = 0; i < _TIMERS; i++)
 		{
 			// Print time
 			LCD.setCursor(3, i + 2);
@@ -109,7 +108,7 @@
 		// If any timer hasFinished(), we'll enable it again
 		TimerAlarmOn = false;
 
-		for(uint8_t i = 0; i < _Timers; i++)
+		for(uint8_t i = 0; i < _TIMERS; i++)
 		{
 			// Print timer status
 			LCD.setCursor(0, i + 2);
@@ -141,7 +140,7 @@
 
 	void UpdateTimerSelector()
 	{
-		for(uint8_t i = 0; i < _Timers; i++)
+		for(uint8_t i = 0; i < _TIMERS; i++)
 		{
 			LCD.setCursor(1, i + 2);
 			LCD.print(i == SelectedTimer ? '>' : ' ');
