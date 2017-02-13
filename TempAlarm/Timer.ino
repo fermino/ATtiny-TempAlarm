@@ -49,17 +49,17 @@
 	{
 		T_UpdateTimerAlarmStatus.run();
 
-		if(ReadPulse(TIMER_ADD_HOUR_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD && KitchenTimers[SelectedTimer].getTime() <= TIMER_LIMIT - 3600)
+		if(ReadPulse(TIMER_ADD_HOUR_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD)
 		{
 			KitchenTimers[SelectedTimer].addHours();
 			delay(TIMER_ADD_BUTTON_DELAY);
 		}
-		else if(ReadPulse(TIMER_ADD_MINUTE_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD && KitchenTimers[SelectedTimer].getTime() <= TIMER_LIMIT - 60)
+		else if(ReadPulse(TIMER_ADD_MINUTE_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD)
 		{
 			KitchenTimers[SelectedTimer].addMinutes();
 			delay(TIMER_ADD_BUTTON_DELAY);
 		}
-		else if(ReadPulse(TIMER_ADD_SECOND_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD && KitchenTimers[SelectedTimer].getTime() <= TIMER_LIMIT - 1)
+		else if(ReadPulse(TIMER_ADD_SECOND_BUTTON_ID, TIMER_ADD_BUTTON_THRESHOLD) >= TIMER_ADD_BUTTON_THRESHOLD)
 		{
 			KitchenTimers[SelectedTimer].addSeconds();
 			delay(TIMER_ADD_BUTTON_DELAY);

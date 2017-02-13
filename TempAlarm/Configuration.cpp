@@ -212,9 +212,6 @@
 		// This will be modified by software according to the available space on the LCD
 		#define MAX_TIMERS 2
 
-		// The time limit for a countdown timer, in seconds: 99:59:59 => 359999
-		#define TIMER_LIMIT 359999
-
 	/**
 	 * MODULE: RTC
 	 * 
