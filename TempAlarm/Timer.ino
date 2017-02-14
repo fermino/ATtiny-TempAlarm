@@ -63,8 +63,6 @@
 				else
 					SelectedTimer = 0;
 
-				UpdateTimerSelector();
-
 				delay(TIMER_CONTROL_SWITCH_BUTTON_DELAY);
 			}
 			else if(Pulse >= TIMER_CONTROL_START_STOP_BUTTON_THRESHOLD)
