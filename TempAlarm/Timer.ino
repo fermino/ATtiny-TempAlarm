@@ -16,8 +16,7 @@
 	// Internal timers
 	SimpleCallbackTimer T_UpdateTimerAlarmStatus(500, F_UpdateTimerAlarmStatus);
 
-	// Other variables
-
+	// Alarm flag
 	bool TimerAlarmOn = false;
 
 	void InitTimer()
@@ -25,23 +24,8 @@
 		LCD.createChar(LCD_TIMER_STOPWATCH_CLOCK_CHAR_INDEX, LCD_Timer_StopwatchClockChar);
 		LCD.createChar(LCD_TIMER_COUNTDOWN_CLOCK_CHAR_INDEX, LCD_Timer_CountdownClockChar);
 		
-		PrintTimerTemplate();
-
 		// This timer will update the data of the kitchen timers on the screen
 		T_UpdateTimerAlarmStatus.start();
-	}
-
-	void PrintTimerTemplate()
-	{
-		for(int i = 2; i - 2 < _TIMERS; i++)
-		{
-			LCD.setCursor(5, i);
-			LCD.print(':');
-			LCD.setCursor(8, i);
-			LCD.print(':');
-		}
-
-		UpdateTimerSelector();
 	}
 
 	void TimerLoop()
@@ -92,11 +76,17 @@
 
 		for(uint8_t i = 0; i < _TIMERS; i++)
 		{
+			// Print selected timer
+			LCD.setCursor(1, i + 2);
+			LCD.print(i == SelectedTimer ? '>' : ' ');
+
 			// Print time
 			LCD.setCursor(3, i + 2);
 			PrintZerofill(KitchenTimers[i].getHours());
+			LCD.print(':');
 			LCD.setCursor(6, i + 2);
 			PrintZerofill(KitchenTimers[i].getMinutes());
+			LCD.print(':');
 			LCD.setCursor(9, i + 2);
 			PrintZerofill(KitchenTimers[i].getSeconds());
 		}
@@ -135,14 +125,5 @@
 			}
 			else
 				LCD.write(KitchenTimers[i].getCurrentMode());
-		}
-	}
-
-	void UpdateTimerSelector()
-	{
-		for(uint8_t i = 0; i < _TIMERS; i++)
-		{
-			LCD.setCursor(1, i + 2);
-			LCD.print(i == SelectedTimer ? '>' : ' ');
 		}
 	}
