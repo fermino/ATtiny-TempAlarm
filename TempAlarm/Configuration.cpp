@@ -1,6 +1,3 @@
-	#include <inttypes.h>
-
-
 	#include "config/RTC.h"
 
 	/**
