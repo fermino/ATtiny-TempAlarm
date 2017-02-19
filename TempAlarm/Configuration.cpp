@@ -1,4 +1,5 @@
 	#include "config/RTC.h"
+	#include "config/Temperature.h"
 
 	/**
 	 * LCD
@@ -45,11 +46,11 @@
 
 		#define SWITCHES_INPUT_PIN A2
 
-		#define SWITCHES_AMOUNT (RTC_SWITCHES_AMOUNT)
+		#define SWITCHES_AMOUNT (RTC_SWITCHES_AMOUNT + TEMPERATURE_SWITCHES_AMOUNT)
 
 		#define SWITCHES_RESISTOR_TOLERANCE 50
 
-		#define SWITCHES_R1 {RTC_SWITCHES_R1}
+		#define SWITCHES_R1 {/*RTC_SWITCHES_R1, */TEMPERATURE_SWITCHES_R1}
 		#define SWITCHES_R2 20000 // 20k
 
 		/*const uint32_t SwitchesR1[SWITCHES_AMOUNT]

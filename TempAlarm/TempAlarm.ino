@@ -42,16 +42,16 @@
 
 		// Modules
 
-		RTCAlarm M_RTC(&LCD, &Switches);
-		//TemperatureAlarm M_Temperature(&LCD, &Switches);
+		//RTCAlarm M_RTC(&LCD, &Switches);
+		TemperatureAlarm M_Temperature(&LCD, &Switches);
 
-		M_RTC.init();
-		//M_Temperature.init();
+		//M_RTC.init();
+		M_Temperature.init();
 
 		while(1)
 		{
-			M_RTC.loop();
-			//M_Temperature.loop();
+			//M_RTC.loop();
+			M_Temperature.loop();
 		}
 	}
 

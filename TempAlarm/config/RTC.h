@@ -1,5 +1,6 @@
 	/**
-	 * RTC configuration
+	 * Module: RTC
+	 * ===========
 	 */
 
 		//#define RTC_HW DS3231
