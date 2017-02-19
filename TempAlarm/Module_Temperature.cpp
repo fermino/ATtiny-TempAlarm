@@ -13,6 +13,10 @@
 
 	void TemperatureAlarm::init()
 	{
+		// Create characters
+		LCD->createChar(TEMPERATURE_DIRECTION_UP_CHAR_INDEX, Temperature_DirectionUpChar);
+		LCD->createChar(TEMPERATURE_DIRECTION_DOWN_CHAR_INDEX, Temperature_DirectionDownChar);
+
 		// Print template
 		LCD->setCursor(0, 1);
 		LCD->print(TEMPERATURE_DEGREE_CHAR);
@@ -30,23 +34,29 @@
 		if(Threshold < TEMPERATURE_LOWEST_THRESHOLD || Threshold > TEMPERATURE_HIGHEST_THRESHOLD)
 			Threshold = TEMPERATURE_DEFAULT_THRESHOLD;
 
-		Direction = eeprom_read_byte(TEMPERATURE_EEPROM_ADDRESS_DIRECTION);
-		if(Direction != 0 && Direction != 1)
-			Direction = 0;
-
-
-		//UpdateTemperatureAlarmDirectionChar();
+		DirectionUp = eeprom_read_byte(TEMPERATURE_EEPROM_ADDRESS_DIRECTION);
+		if(DirectionUp != false && DirectionUp != true)
+			DirectionUp = true;
 	}
 
 	void TemperatureAlarm::loop()
 	{
 		// Timers
+
 		if(millis() >= (UpdateTemperature_StartedAt + TEMPERATURE_CONVERSION_TIME))
 		{
 			UpdateTemperature_StartedAt = millis();
 
 			UpdateTemperature();
 		}
+		if(millis() >= (UpdateStatus_StartedAt + TEMPERATURE_STATUS_UPDATE_DELAY))
+		{
+			UpdateStatus_StartedAt = millis();
+
+			UpdateStatus();
+		}
+
+		UpdateDirection();
 
 		// Show Threshold temperature
 
@@ -91,17 +101,32 @@
 			LCD->print(' ');
 
 			// If the temperature is above or below the given temperature, activate the alarm
-			if(Enabled && ((Direction == 0 && Temperature >= Threshold) || (Direction == 1 && Temperature <= Threshold)))
+			if(Enabled && ((DirectionUp == 0 && Temperature <= Threshold) || (DirectionUp == 1 && Temperature >= Threshold)))
 				AlarmOn = true;
 		}
 		else
 			LCD->print("-----");
 	}
 
+	void TemperatureAlarm::UpdateStatus()
+	{
+		LCD->setCursor(19, 1);
+		
+		if(Enabled)
+		{
+			LCD->print(CurrentStatusCharacter ? TEMPERATURE_ALARM_ENABLED_0_CHAR : TEMPERATURE_ALARM_ENABLED_1_CHAR);
+
+			CurrentStatusCharacter = !CurrentStatusCharacter;
+		}
+		else
+			LCD->print(TEMPERATURE_ALARM_DISABLED_CHAR);
+	}
+
+	void TemperatureAlarm::UpdateDirection()
+	{
+		LCD->setCursor(18, 1);
+		LCD->write(DirectionUp ? TEMPERATURE_DIRECTION_UP_CHAR_INDEX : TEMPERATURE_DIRECTION_DOWN_CHAR_INDEX);
+	}
+
 	bool TemperatureAlarm::isAlarmOn()
 	{ return AlarmOn; }
-
-	void TemperatureAlarm::F_UpdateTemperature()
-	{
-
-	}

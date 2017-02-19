@@ -1,3 +1,5 @@
+	#include <inttypes.h>
+
 	/**
 	 * Module: Temperature
 	 * ===================
@@ -21,6 +23,40 @@
 
 		#define TEMPERATURE_DEGREE_CHAR ((char) 223)
 
+		#define TEMPERATURE_ALARM_ENABLED_0_CHAR '!'
+		#define TEMPERATURE_ALARM_ENABLED_1_CHAR ((char) 255) // A character full of black dots C:
+		
+		#define TEMPERATURE_ALARM_DISABLED_CHAR '-'
+	
+		#define TEMPERATURE_DIRECTION_UP_CHAR_INDEX 0
+		const byte Temperature_DirectionUpChar[8]
+		{
+			0b00100,
+			0b01110,
+			0b11111,
+			0b11111,
+			0b00100,
+			0b00100,
+			0b00100,
+			0b00100
+		};
+
+		#define TEMPERATURE_DIRECTION_DOWN_CHAR_INDEX 1
+		const byte Temperature_DirectionDownChar[8]
+		{
+			0b00100,
+			0b00100,
+			0b00100,
+			0b00100,
+			0b11111,
+			0b11111,
+			0b01110,
+			0b00100
+		};
+
+		// Some characters blink on the screen on certain situations
+		#define TEMPERATURE_STATUS_UPDATE_DELAY 500
+
 	/**
 	 * OneWireSwitches configuration
 	 */
@@ -38,6 +74,10 @@
 
 	/**
 	 * EEPROM
+	 * 
+	 * The EEPROM can store information for a loong time. 
+	 * Here, we define in which direction will we store the 
+	 * last used temperature and alarm direction. 
 	 */
 
 		#define TEMPERATURE_EEPROM_ADDRESS_THRESHOLD 0

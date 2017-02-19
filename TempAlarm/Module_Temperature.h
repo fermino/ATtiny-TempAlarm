@@ -23,16 +23,22 @@
 			byte SensorAddress[8];
 
 			bool Enabled = false;
-			byte Direction = 0;
+			bool DirectionUp = true;
 
 			int8_t Threshold;
 
 			bool AlarmOn = false;
 
 			// Timers
-			uint32_t UpdateTemperature_StartedAt = 0;
 
+			uint32_t UpdateTemperature_StartedAt = 0;
 			void UpdateTemperature();
+
+			uint8_t CurrentStatusCharacter = 1;
+			uint32_t UpdateStatus_StartedAt = 0;
+			void UpdateStatus();
+
+			void UpdateDirection();
 
 		public:
 			TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches* S);
