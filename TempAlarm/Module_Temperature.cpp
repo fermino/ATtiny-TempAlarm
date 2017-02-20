@@ -145,9 +145,16 @@
 			// If the temperature is above or below the given temperature, activate the alarm
 			if(Enabled && ((DirectionUp == 0 && Temperature <= Threshold) || (DirectionUp == 1 && Temperature >= Threshold)))
 				AlarmOn = true;
+			else
+				AlarmOn = false;
 		}
 		else
+		{
 			LCD->print("-----");
+
+			if(Enabled)
+				AlarmOn = true;
+		}
 	}
 
 	void TemperatureAlarm::UpdateStatus()
