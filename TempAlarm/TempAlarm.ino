@@ -38,7 +38,10 @@
 
 		const uint32_t SwitchesR1[SWITCHES_AMOUNT] SWITCHES_R1;
 
-		OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesR1, SWITCHES_R2, SWITCHES_RESISTOR_TOLERANCE);
+		OneWireSwitches<SWITCHES_AMOUNT> Switches(SWITCHES_INPUT_PIN, SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
+
+		// Buzzer output
+		pinMode(BUZZER_PIN, OUTPUT);
 
 		// Modules
 
@@ -52,6 +55,8 @@
 		{
 			//M_RTC.loop();
 			M_Temperature.loop();
+
+			digitalWrite(BUZZER_PIN, M_Temperature.isAlarmOn());
 		}
 	}
 

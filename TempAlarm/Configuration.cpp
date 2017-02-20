@@ -2,6 +2,16 @@
 	#include "config/Temperature.h"
 
 	/**
+	 * TempAlarm v1.0
+	 * ==============
+	 * 
+	 * __ ADD INFO
+	 */
+
+		// To do: PWM output?
+		#define BUZZER_PIN 1
+
+	/**
 	 * LCD
 	 * 
 	 * Pinout: 
@@ -48,7 +58,8 @@
 
 		#define SWITCHES_AMOUNT (RTC_SWITCHES_AMOUNT + TEMPERATURE_SWITCHES_AMOUNT)
 
-		#define SWITCHES_RESISTOR_TOLERANCE 50
+		// Values, over 10bit reading (102.4 => 10% over total reading)
+		#define SWITCHES_READ_TOLERANCE 25
 
 		#define SWITCHES_R1 {/*RTC_SWITCHES_R1, */TEMPERATURE_SWITCHES_R1}
 		#define SWITCHES_R2 20000 // 20k

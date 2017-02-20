@@ -1,3 +1,5 @@
+#ifndef TEMPALARM_CONFIGURATION_h
+#define TEMPALARM_CONFIGURATION_h	
 	#include <inttypes.h>
 
 	/**
@@ -29,7 +31,7 @@
 		#define TEMPERATURE_ALARM_DISABLED_CHAR '-'
 	
 		#define TEMPERATURE_DIRECTION_UP_CHAR_INDEX 0
-		const byte Temperature_DirectionUpChar[8]
+		const uint8_t Temperature_DirectionUpChar[8]
 		{
 			0b00100,
 			0b01110,
@@ -42,7 +44,7 @@
 		};
 
 		#define TEMPERATURE_DIRECTION_DOWN_CHAR_INDEX 1
-		const byte Temperature_DirectionDownChar[8]
+		const uint8_t Temperature_DirectionDownChar[8]
 		{
 			0b00100,
 			0b00100,
@@ -68,10 +70,21 @@
 			68000,	// 68k	\
 			47000	// 47k	
 
-		#define TEMPERATURE_BUTTONID_MINUS 0
-		#define TEMPERATURE_BUTTONID_PLUS 1
-		#define TEMPERATURE_BUTTONID_STARTSTOP 2
+		#define TEMPERATURE_BUTTON_MINUS_ID 0
+		#define TEMPERATURE_BUTTON_MINUS_THRESHOLD 25
+		#define TEMPERATURE_BUTTON_MINUS_DELAY 50
 
+		#define TEMPERATURE_BUTTON_PLUS_ID 1
+		#define TEMPERATURE_BUTTON_PLUS_THRESHOLD 25
+		#define TEMPERATURE_BUTTON_PLUS_DELAY 50
+
+		#define TEMPERATURE_BUTTON_STARTSTOPDIRECTION_ID 2
+
+		#define TEMPERATURE_BUTTON_STARTSTOP_THRESHOLD 25
+		#define TEMPERATURE_BUTTON_STARTSTOP_DELAY 500
+
+		#define TEMPERATURE_BUTTON_DIRECTION_THRESHOLD 500
+		#define TEMPERATURE_BUTTON_DIRECTION_DELAY 500
 	/**
 	 * EEPROM
 	 * 
@@ -92,3 +105,4 @@
 
 		// The temperature conversion takes about 750ms, so, I think this is pretty reasonable
 		#define TEMPERATURE_CONVERSION_TIME 775
+#endif

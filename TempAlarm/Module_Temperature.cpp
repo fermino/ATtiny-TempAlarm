@@ -7,7 +7,7 @@
 
 	#include "Module_Temperature.h"
 
-	TemperatureAlarm::TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches* S)
+	TemperatureAlarm::TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S)
 	: TempAlarmModule(L, S)
 	{}
 
@@ -24,6 +24,8 @@
 
 		LCD->setCursor(10, 1);
 		LCD->print("Al:");
+
+		UpdateDirection();
 
 		// Find sensor's address
 		OW.search(SensorAddress);
@@ -56,7 +58,47 @@
 			UpdateStatus();
 		}
 
-		UpdateDirection();
+		// Buttons
+
+		// ReadPulse should not return anything higher than Timeout, but well, using >= instead ==
+		// has no effect over flash/memory usage, so, it can avoid further problems if code gets changed
+
+		if(Switches->readKeyPulse(TEMPERATURE_BUTTON_MINUS_ID, TEMPERATURE_BUTTON_MINUS_THRESHOLD) >= TEMPERATURE_BUTTON_MINUS_THRESHOLD)
+		{
+			if(Threshold > TEMPERATURE_LOWEST_THRESHOLD)
+				Threshold--;
+
+			delay(TEMPERATURE_BUTTON_MINUS_DELAY);
+		}
+		else if(Switches->readKeyPulse(TEMPERATURE_BUTTON_PLUS_ID, TEMPERATURE_BUTTON_PLUS_THRESHOLD) >= TEMPERATURE_BUTTON_PLUS_THRESHOLD)
+		{
+			if(Threshold < TEMPERATURE_HIGHEST_THRESHOLD)
+				Threshold++;
+
+			delay(TEMPERATURE_BUTTON_PLUS_DELAY);
+		}
+
+		uint16_t PulseLength = Switches->readKeyPulse(TEMPERATURE_BUTTON_STARTSTOPDIRECTION_ID, TEMPERATURE_BUTTON_DIRECTION_THRESHOLD);
+		if(PulseLength >= TEMPERATURE_BUTTON_DIRECTION_THRESHOLD)
+		{
+			DirectionUp = !DirectionUp;
+			UpdateDirection();
+
+			delay(TEMPERATURE_BUTTON_DIRECTION_DELAY);
+		}
+		else if(PulseLength >= TEMPERATURE_BUTTON_STARTSTOP_THRESHOLD)
+		{
+			AlarmOn = false;
+
+			Enabled = !Enabled;
+
+			// Store the temperature and the direction in the EEPROM
+			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
+			eeprom_update_byte(TEMPERATURE_EEPROM_ADDRESS_THRESHOLD, Threshold);
+			eeprom_update_byte(TEMPERATURE_EEPROM_ADDRESS_DIRECTION, DirectionUp);
+
+			delay(TEMPERATURE_BUTTON_STARTSTOP_DELAY);
+		}
 
 		// Show Threshold temperature
 

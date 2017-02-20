@@ -12,6 +12,7 @@
 	#include <avr/eeprom.h>
 	#include <OneWire.h>
 
+	#include "Configuration.cpp"
 	#include "config/Temperature.h"
 
 	class TemperatureAlarm : public TempAlarmModule
@@ -41,7 +42,7 @@
 			void UpdateDirection();
 
 		public:
-			TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches* S);
+			TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S);
 			void init();
 			void loop();
 

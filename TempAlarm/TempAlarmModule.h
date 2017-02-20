@@ -4,17 +4,17 @@
 	#include <LiquidCrystal_I2C.h>
 	#include <OneWireSwitches.h>
 
-	//#include "Configuration.cpp"
+	#include "Configuration.cpp"
 
 	class TempAlarmModule
 	{
 		protected: 
 			LiquidCrystal_I2C* LCD;
-			OneWireSwitches* Switches;
+			OneWireSwitches<SWITCHES_AMOUNT>* Switches;
 
 		public:
 			// Can't we mark this as final
-			TempAlarmModule(LiquidCrystal_I2C* L, OneWireSwitches* S);
+			TempAlarmModule(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S);
 
 			virtual void init() = 0;
 			virtual void loop() = 0;
