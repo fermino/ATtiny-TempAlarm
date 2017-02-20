@@ -1,12 +1,6 @@
 #ifndef RTCAlarm_h
 #define RTCAlarm_h
 
-	#if ARDUINO >= 100
-		#include <Arduino.h>
-	#else
-		#include <WProgram.h>
-	#endif
-	
 	#include "TempAlarmModule.h"
 
  	#include <TinyWireM.h>
@@ -19,11 +13,12 @@
 		private:
 			bool AlarmOn = false;
 
-			void getTime(byte* Second, byte* Minute, byte* Hour, byte* DayOfWeek, byte* DayOfMonth, byte* Month, byte* Year);
+			void getTime(uint8_t* Second, uint8_t* Minute, uint8_t* Hour, uint8_t* DayOfWeek, uint8_t* DayOfMonth, uint8_t* Month, uint8_t* Year);
+			uint8_t getTemperature();
 
-			inline byte dec2bcd(byte dec)
+			inline uint8_t dec2bcd(uint8_t dec)
 			{ return (dec / 10 * 16) + (dec % 10); }
-			inline byte bcd2dec(byte bcd)
+			inline uint8_t bcd2dec(uint8_t bcd)
 			{ return (bcd / 16 * 10) + (bcd % 16); }
 
 			void printZerofill(uint8_t Number);

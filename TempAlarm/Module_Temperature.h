@@ -1,12 +1,6 @@
 #ifndef TemperatureAlarm_h
 #define TemperatureAlarm_h
 
-	#if ARDUINO >= 100
-		#include <Arduino.h>
-	#else
-		#include <WProgram.h>
-	#endif
-	
 	#include "TempAlarmModule.h"
 
 	#include <avr/eeprom.h>

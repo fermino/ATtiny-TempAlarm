@@ -37,13 +37,24 @@
 		printZerofill(Minute);
 		LCD->setCursor(18, 0);
 		printZerofill(Second);
+
+		/*TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
+		TinyWireM.write(0x00);
+		TinyWireM.write(dec2bcd(Second));
+		TinyWireM.write(dec2bcd(Minute));
+		TinyWireM.write(dec2bcd(Hour));
+		TinyWireM.write(dec2bcd(DayOfWeek));
+		TinyWireM.write(dec2bcd(DayOfMonth));
+		TinyWireM.write(dec2bcd(Month));
+		TinyWireM.write(dec2bcd(Year));
+		TinyWireM.endTransmission();*/
 	}
 
-	void RTCAlarm::getTime(byte* Second, byte* Minute, byte* Hour, byte* DayOfWeek, byte* DayOfMonth, byte* Month, byte* Year)
+	void RTCAlarm::getTime(uint8_t* Second, uint8_t* Minute, uint8_t* Hour, uint8_t* DayOfWeek, uint8_t* DayOfMonth, uint8_t* Month, uint8_t* Year)
 	{
 		// The LCD already executed begin(), so, there's no need for it
 		TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
-		TinyWireM.write(0x00);
+		TinyWireM.write(0x00); // 00h
 		TinyWireM.endTransmission();
 
 		TinyWireM.requestFrom(RTC_I2C_ADDRESS, 7);
@@ -55,6 +66,18 @@
 		*DayOfMonth = bcd2dec(TinyWireM.read());
 		*Month 		= bcd2dec(TinyWireM.read());
 		*Year 		= bcd2dec(TinyWireM.read());
+	}
+
+	uint8_t RTCAlarm::getTemperature()
+	{
+		TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
+		TinyWireM.write(0x11); // 011h
+		TinyWireM.endTransmission();
+
+		// Only request integer part
+		TinyWireM.requestFrom(RTC_I2C_ADDRESS, 1);
+
+		return TinyWireM.read();
 	}
 
 	void RTCAlarm::printZerofill(uint8_t Number)
