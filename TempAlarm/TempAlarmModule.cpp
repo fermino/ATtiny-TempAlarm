@@ -5,3 +5,11 @@
 		LCD = L;
 		Switches = S;
 	}
+
+	void TempAlarmModule::printZerofill(uint8_t Number)
+	{
+		if(Number < 10)
+			LCD->print('0');
+
+		LCD->print(Number);
+	}

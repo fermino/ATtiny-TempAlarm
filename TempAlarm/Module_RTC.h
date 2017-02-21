@@ -21,8 +21,6 @@
 			inline uint8_t bcd2dec(uint8_t bcd)
 			{ return (bcd / 16 * 10) + (bcd % 16); }
 
-			void printZerofill(uint8_t Number);
-
 		public:
 			void init();
 			void loop();

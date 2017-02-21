@@ -12,6 +12,10 @@
 			LiquidCrystal_I2C* LCD;
 			OneWireSwitches<SWITCHES_AMOUNT>* Switches;
 
+			// Some utils
+
+			void printZerofill(uint8_t Number);
+
 		public:
 			// Can't we mark this as final
 			TempAlarmModule(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S);

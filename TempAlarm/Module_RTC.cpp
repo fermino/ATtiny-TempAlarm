@@ -80,13 +80,5 @@
 		return TinyWireM.read();
 	}
 
-	void RTCAlarm::printZerofill(uint8_t Number)
-	{
-		if(Number < 10)
-			LCD->print('0');
-
-		LCD->print(Number);
-	}
-
 	bool RTCAlarm::isAlarmOn()
 	{ return AlarmOn; }
