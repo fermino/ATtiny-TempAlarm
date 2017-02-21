@@ -1,5 +1,5 @@
-#ifndef TEMPALARM_CONFIGURATION_h
-#define TEMPALARM_CONFIGURATION_h	
+#ifndef TempAlarm_Temperature_Configuration_h
+#define TempAlarm_Temperature_Configuration_h
 	#include <inttypes.h>
 
 	/**
