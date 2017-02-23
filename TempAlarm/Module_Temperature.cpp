@@ -126,7 +126,7 @@
 				OW.write(0xBE); // Read Scratchpad [BEh] command
 
 				// Read and process the temperature
-				byte LSB = OW.read();
+				uint8_t LSB = OW.read();
 
 				Temperature = (OW.read() << 4) | (LSB >> 4);
 				DecimalPart = (LSB & 0b00001111) * 0.625f;

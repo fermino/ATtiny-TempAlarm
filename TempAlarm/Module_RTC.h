@@ -16,7 +16,7 @@
 
 	static const char Days[7][3] {RTC_DAYS};
 
-	extern void changeAlarmStatus(bool Enabled);
+	extern void setAlarmStatus(bool Enabled);
 
 	class RTCAlarm : public TempAlarmModule
 	{

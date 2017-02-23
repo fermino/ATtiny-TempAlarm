@@ -7,6 +7,15 @@
  * Add DHT22 (environment temperature)
  * Compile modules only when enabled
  */
+	
+	#ifndef cbi
+		#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+	#endif
+	#ifndef sbi
+		#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+	#endif
+
+	#include <avr/io.h>
 
 	#include "Configuration.cpp"
 
@@ -41,8 +50,9 @@
 
 		OneWireSwitches<SWITCHES_AMOUNT> Switches(SWITCHES_INPUT_PIN, SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
 
-		// Buzzer output
-		pinMode(BUZZER_PIN, OUTPUT);
+		// Set buzzer pin as output
+		// pinMode(BUZZER_PIN, OUTPUT);
+		sbi(BUZZER_DDR, BUZZER_BIT);
 
 		// Modules
 
@@ -60,13 +70,17 @@
 			M_Temperature.loop();
 			M_Timer.loop();
 
-			changeAlarmStatus(/*M_RTC.isAlarmOn() ||*/ M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
+			setAlarmStatus(M_RTC.isAlarmOn() || M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
 		}
 	}
 
-	void changeAlarmStatus(bool Enabled)
+	void setAlarmStatus(bool Enabled)
 	{
-		digitalWrite(BUZZER_PIN, Enabled);
+		// digitalWrite(BUZZER_PIN, Enabled);
+		if(Enabled)
+			sbi(BUZZER_PORT, BUZZER_BIT);
+		else
+			cbi(BUZZER_PORT, BUZZER_BIT);
 	}
 
 	void loop()

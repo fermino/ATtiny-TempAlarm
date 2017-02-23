@@ -10,7 +10,11 @@
 	 */
 
 		// To do: PWM output?
-		#define BUZZER_PIN 1
+		// Refer to the datasheet or tiny's pinout if you want to change it. 
+		// PB1 is digital output 1
+		#define BUZZER_DDR	DDRB
+		#define BUZZER_PORT	PORTB
+		#define BUZZER_BIT	PB1
 
 	/**
 	 * LCD

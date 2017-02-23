@@ -14,11 +14,13 @@
 
 		if(Switches->readKey(RTC_BUTTON_CONFIGURE_ID))
 		{
-			//loop();
+			loop();
 
-			changeAlarmStatus(true);
+			setAlarmStatus(true);
 			delay(RTC_BUTTON_CONFIGURE_BUZZER_TIME);
-			changeAlarmStatus(false);
+			setAlarmStatus(false);
+
+			delay(RTC_BUTTON_CONFIGURE_DELAY);
 
 			for(int8_t ByteToConfigure = 6; ByteToConfigure >= 0; ByteToConfigure--)
 			{
@@ -43,9 +45,11 @@
 					
 					if(Switches->readKeyPulse(RTC_BUTTON_NEXT_ID, RTC_BUTTON_NEXT_THRESHOLD) >= RTC_BUTTON_NEXT_THRESHOLD)
 					{
-						changeAlarmStatus(true);
+						setAlarmStatus(true);
 						delay(RTC_BUTTON_NEXT_BUZZER_TIME);
-						changeAlarmStatus(false);
+						setAlarmStatus(false);
+
+						delay(RTC_BUTTON_NEXT_DELAY);
 
 						break;
 					}
