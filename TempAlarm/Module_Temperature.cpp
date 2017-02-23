@@ -113,7 +113,8 @@
 	{
 		LCD->setCursor(4, 1);
 
-		float Temperature = NULL;
+		int8_t Temperature = NULL;
+		uint8_t DecimalPart = 0;
 
 		// If the found (or not) address is a recognized one
 		if(SensorAddress[0] == 0x10 || SensorAddress[0] == 0x28)
@@ -126,8 +127,9 @@
 
 				// Read and process the temperature
 				byte LSB = OW.read();
-				Temperature = ((OW.read() << 8) | LSB);
-				Temperature = Temperature / 16;
+
+				Temperature = (OW.read() << 4) | (LSB >> 4);
+				DecimalPart = (LSB & 0b00001111) * 0.625f;
 
 				// Start another conversion; will be used in the next function call
 				OW.reset();
@@ -139,7 +141,9 @@
 		if(Temperature != NULL)
 		{
 			// Print it :P
-			LCD->print(Temperature, 1);
+			LCD->print(Temperature);
+			LCD->print('.');
+			LCD->print(DecimalPart);
 			LCD->print(' ');
 
 			// If the temperature is above or below the given temperature, activate the alarm
