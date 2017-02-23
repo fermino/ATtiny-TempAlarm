@@ -6,7 +6,8 @@
 		//#define RTC_HW DS3231
 		#define RTC_I2C_ADDRESS 0x68
 
-		#define RTC_DAYS "Do\0", "Lu\0", "Ma\0", "Mi\0", "Ju\0", "Vi\0", "Sa\0"
+		#define RTC_DAYS "Dom\0", "Lun\0", "Mar\0", "Mie\0", "Jue\0", "Vie\0", "Sab\0"
+		#define RTC_MONTHS "ene\0", "feb\0", "mar\0", "abr\0", "may\0", "jun\0", "jul\0", "ago\0", "sep\0", "oct\0", "nov\0", "dic\0"
 
 	/**
 	 * OneWireSwitches configuration

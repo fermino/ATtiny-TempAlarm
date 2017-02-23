@@ -2,11 +2,6 @@
 
 	void RTCAlarm::init()
 	{
-		LCD->setCursor(5, 0);
-		LCD->print('/');
-		LCD->setCursor(8, 0);
-		LCD->print('/');
-
 		LCD->setCursor(14, 0);
 		LCD->print(':');
 		LCD->setCursor(17, 0);
@@ -67,11 +62,9 @@
 		LCD->setCursor(0, 0);
 		LCD->print(Days[Time[RTC_DAY]]);
 
-		LCD->setCursor(3, 0);
+		LCD->setCursor(4, 0);
 		printZerofill(Time[RTC_DATE]);
-		LCD->setCursor(6, 0);
-		printZerofill(Time[RTC_MONTH]);
-		LCD->setCursor(9, 0);
+		LCD->print(Months[Time[RTC_MONTH] - 1]);
 		printZerofill(Time[RTC_YEAR]);
 
 		LCD->setCursor(12, 0);
