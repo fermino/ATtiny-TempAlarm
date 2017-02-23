@@ -42,6 +42,10 @@
 
 			bool hasFinished(uint8_t TimerIndex);
 
+			// Timers
+			uint32_t UpdateAlarmStatus_StartedAt = 0;
+			void UpdateAlarmStatus();
+
 		public:
 			void init();
 			void loop();

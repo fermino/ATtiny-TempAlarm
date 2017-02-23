@@ -9,7 +9,7 @@
 	 */
 
 		// How many timers? (be carefull with LCD's remaining space!)
-		#define TIMER_AMOUNT 1
+		#define TIMER_AMOUNT 2
 
 		// 99 hours, 59 minutes, 59 seconds
 		#define TIMER_TIME_LIMIT 359999
@@ -19,6 +19,10 @@
 	 */
 
 		#define TIMER_SELECTED_TIMER_CHAR '>'
+
+		// This two chars will blink alternating with the mode character (below)
+		#define TIMER_ENABLED_CHAR ' '
+		#define TIMER_FINISHED_CHAR '!'
 
 		#define TIMER_STOPWATCH_CHAR_INDEX 2
 		const uint8_t Timer_StopwatchChar[]
@@ -46,6 +50,8 @@
 			0b00000
 		};
 
+		// Some characters blink on the screen on certain situations
+		#define TIMER_STATUS_UPDATE_DELAY 500
 
 	/**
 	 * OneWireSwitches configuration

@@ -22,8 +22,8 @@
 	 * Here you must put the LCD config and features, as the I2C address, columns
 	 * and rows.
 	 * 
-	 * Also, here are defined some characters that are used widely in the firmware, 
-	 * you can change them if you want :)
+	 * Also, in config/* files are defined some characters that are widely used
+	 * in the firmware, you can change them if you want :)
 	 */
 
 	#define LCD_I2C_ADDRESS 0x27

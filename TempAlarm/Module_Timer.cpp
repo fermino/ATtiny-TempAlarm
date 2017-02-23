@@ -9,6 +9,15 @@
 
 	void TimerAlarm::loop()
 	{
+		// Timers
+
+		if(millis() >= (UpdateAlarmStatus_StartedAt + TIMER_STATUS_UPDATE_DELAY))
+		{
+			UpdateAlarmStatus_StartedAt = millis();
+
+			UpdateAlarmStatus();
+		}
+
 		// Buttons
 
 		addTime
@@ -23,6 +32,9 @@
 		if(PulseLength >= TIMER_BUTTON_CONTROL_RESET_THRESHOLD)
 		{
 			reset(Selected);
+
+			printTime();
+
 			delay(TIMER_BUTTON_CONTROL_RESET_DELAY);
 		}
 		else if(PulseLength >= TIMER_BUTTON_CONTROL_SWITCH_THRESHOLD)
@@ -35,6 +47,8 @@
 			else
 				Selected = 0;*/
 
+			printTime();
+
 			delay(TIMER_BUTTON_CONTROL_SWITCH_DELAY);
 		}
 		else if(PulseLength >= TIMER_BUTTON_CONTROL_STARTSTOP_THRESHOLD)
@@ -44,9 +58,12 @@
 			else
 				start(Selected);
 
+			printTime();
+
 			delay(TIMER_BUTTON_CONTROL_STARTSTOP_DELAY);
 		}
 
+		// Print time :P
 		printTime();
 	}
 
@@ -142,6 +159,42 @@
 			return seconds() >= Timers[TimerIndex].StartedAt + Timers[TimerIndex].Time;
 
 		return false;
+	}
+
+	void TimerAlarm::UpdateAlarmStatus()
+	{
+		// Here we turn the alarm off
+		// If any timer hasFinished(), we'll enable it again
+		AlarmOn = false;
+
+		for(uint8_t i = 0; i < TIMER_AMOUNT; i++)
+		{
+			// Print timer status
+			LCD->setCursor(0, i + 2);
+
+			if(hasFinished(i))
+			{
+				if(StatusCharacters[i])
+					LCD->print(TIMER_FINISHED_CHAR);
+				else
+					LCD->write(Timers[i].Mode + 2); // Just a trick, char's index must match every timer mode
+
+				StatusCharacters[i] = !StatusCharacters[i];
+
+				AlarmOn = true;
+			}
+			else if(Timers[i].Started)
+			{
+				if(StatusCharacters[i])
+					LCD->print(TIMER_ENABLED_CHAR);
+				else
+					LCD->write(Timers[i].Mode + 2); // Same trick as above
+
+				StatusCharacters[i] = !StatusCharacters[i];
+			}
+			else
+				LCD->write(Timers[i].Mode + 2); // Same :P
+		}
 	}
 
 	bool TimerAlarm::isAlarmOn()
