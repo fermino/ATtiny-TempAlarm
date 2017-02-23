@@ -11,12 +11,12 @@
 	{
 		// Buttons
 
-		/*addTime
+		addTime
 		(
 			Switches->readKeyPulse(TIMER_BUTTON_ADD_HOUR_ID, TIMER_BUTTON_ADD_THRESHOLD) >= TIMER_BUTTON_ADD_THRESHOLD ? 3600 :
 			Switches->readKeyPulse(TIMER_BUTTON_ADD_MINUTE_ID, TIMER_BUTTON_ADD_THRESHOLD) >= TIMER_BUTTON_ADD_THRESHOLD ? 60 :
 			Switches->readKeyPulse(TIMER_BUTTON_ADD_SECOND_ID, TIMER_BUTTON_ADD_THRESHOLD) >= TIMER_BUTTON_ADD_THRESHOLD ? 1 : 0
-		);*/
+		);
 
 		uint16_t PulseLength = Switches->readKeyPulse(TIMER_BUTTON_CONTROL_ID, TIMER_BUTTON_CONTROL_RESET_THRESHOLD);
 
@@ -75,8 +75,10 @@
 		{
 			if(Timers[TimerIndex].Started)
 			{
+				// Save current ELAPSED time, then stop() will only pause the stopwatch
 				Timers[TimerIndex].Time = seconds() - Timers[TimerIndex].StartedAt;
 
+				// Limit max time
 				if(Timers[TimerIndex].Time > TIMER_TIME_LIMIT)
 				{
 					stop(TimerIndex);
@@ -85,23 +87,31 @@
 				}
 			}
 
+			// Return saved time or 0
 			return Timers[TimerIndex].Time;
 		}
+		else
+		{
+			// If is not started or has already finished, we'll return the set time
+			if(!Timers[TimerIndex].Started || hasFinished(TimerIndex))
+				return Timers[TimerIndex].Time;
 
-		return 0;
+			return Timers[TimerIndex].StartedAt + Timers[TimerIndex].Time - seconds();
+		}
 	}
 
 	void TimerAlarm::addTime(uint32_t Seconds /* = 1 */)
 	{
 		// Limit time addition (also prevents buffer overflow)
 		//if((Time > 0) && ((Seconds > (0xFFFFFFFF - Time)) || ((Time + Seconds) > KITCHENTIMER_TIMELIMIT)))
-		/*if(Timers[Selected].Time + Seconds > TIMER_TIME_LIMIT)
+		// The first check will avoid changing the mode if we're trying to add 0
+		if(Seconds == 0 || Timers[Selected].Time + Seconds > TIMER_TIME_LIMIT)
 			return;
 
 		// If the user added some time, we can think that he wants a countdown!
 		Timers[Selected].Mode = TIMER_MODE_COUNTDOWN;
 
-		Timers[Selected].Time += Seconds;*/
+		Timers[Selected].Time += Seconds;
 	}
 
 	void TimerAlarm::start(uint8_t TimerIndex)
@@ -124,6 +134,14 @@
 
 		// If the user adds time, this will be changed, else, it will count up
 		Timers[TimerIndex].Mode = TIMER_MODE_STOPWATCH;
+	}
+
+	bool TimerAlarm::hasFinished(uint8_t TimerIndex)
+	{
+		if(Timers[TimerIndex].Started && Timers[TimerIndex].Mode == TIMER_MODE_COUNTDOWN)
+			return seconds() >= Timers[TimerIndex].StartedAt + Timers[TimerIndex].Time;
+
+		return false;
 	}
 
 	bool TimerAlarm::isAlarmOn()

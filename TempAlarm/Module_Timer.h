@@ -40,6 +40,8 @@
 			void stop(uint8_t TimerIndex);
 			void reset(uint8_t TimerIndex);
 
+			bool hasFinished(uint8_t TimerIndex);
+
 		public:
 			void init();
 			void loop();

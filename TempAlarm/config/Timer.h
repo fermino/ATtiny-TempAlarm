@@ -14,7 +14,6 @@
 		// 99 hours, 59 minutes, 59 seconds
 		#define TIMER_TIME_LIMIT 359999
 
-
 	/**
 	 * LCD configuration
 	 */
