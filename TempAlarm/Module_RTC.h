@@ -6,7 +6,17 @@
  	#include <TinyWireM.h>
 	#include "config/RTC.h"
 
-	static const char DaysOfWeek[7][3] {RTC_DAYS_OF_WEEK};
+	#define RTC_SECONDS	0
+	#define RTC_MINUTES	1
+	#define RTC_HOURS 	2
+	#define RTC_DAY		3
+	#define RTC_DATE	4
+	#define RTC_MONTH	5
+	#define RTC_YEAR	6
+
+	static const char Days[7][3] {RTC_DAYS};
+
+	extern void changeAlarmStatus(bool Enabled);
 
 	class RTCAlarm : public TempAlarmModule
 	{
@@ -15,7 +25,15 @@
 		private:
 			bool AlarmOn = false;
 
-			void getTime(uint8_t* Second, uint8_t* Minute, uint8_t* Hour, uint8_t* DayOfWeek, uint8_t* DayOfMonth, uint8_t* Month, uint8_t* Year);
+			// Seconds, minutes, hours, day, date, month, year
+			const uint8_t TimeUpperLimits[7] {59, 59, 23, 6, 31, 12, 99};
+			const uint8_t TimeLowerLimits[7] { 0,  0,  0, 0,  1,  1,  0};
+
+			uint8_t Time[7];
+
+			void getTime();
+			void setTime();
+
 			uint8_t getTemperature();
 
 			inline uint8_t dec2bcd(uint8_t dec)

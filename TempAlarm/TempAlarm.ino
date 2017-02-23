@@ -60,8 +60,13 @@
 			M_Temperature.loop();
 			M_Timer.loop();
 
-			digitalWrite(BUZZER_PIN, M_RTC.isAlarmOn() || M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
+			changeAlarmStatus(/*M_RTC.isAlarmOn() ||*/ M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
 		}
+	}
+
+	void changeAlarmStatus(bool Enabled)
+	{
+		digitalWrite(BUZZER_PIN, Enabled);
 	}
 
 	void loop()

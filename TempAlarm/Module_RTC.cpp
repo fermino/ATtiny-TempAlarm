@@ -11,44 +11,74 @@
 		LCD->print(':');
 		LCD->setCursor(17, 0);
 		LCD->print(':');
+
+		if(Switches->readKey(RTC_BUTTON_CONFIGURE_ID))
+		{
+			//loop();
+
+			changeAlarmStatus(true);
+			delay(RTC_BUTTON_CONFIGURE_BUZZER_TIME);
+			changeAlarmStatus(false);
+
+			for(int8_t ByteToConfigure = 6; ByteToConfigure >= 0; ByteToConfigure--)
+			{
+				for(;;)
+				{
+					if(Switches->readKeyPulse(RTC_BUTTON_MINUS_ID, RTC_BUTTON_MINUS_THRESHOLD) >= RTC_BUTTON_MINUS_THRESHOLD)
+					{
+						if(Time[ByteToConfigure] > TimeLowerLimits[ByteToConfigure])
+						{
+							Time[ByteToConfigure]--;
+							setTime();
+						}
+					}
+					else if(Switches->readKeyPulse(RTC_BUTTON_PLUS_ID, RTC_BUTTON_PLUS_THRESHOLD) >= RTC_BUTTON_PLUS_THRESHOLD)
+					{
+						if(Time[ByteToConfigure] < TimeUpperLimits[ByteToConfigure])
+						{
+							Time[ByteToConfigure]++;
+							setTime();
+						}
+					}
+					
+					if(Switches->readKeyPulse(RTC_BUTTON_NEXT_ID, RTC_BUTTON_NEXT_THRESHOLD) >= RTC_BUTTON_NEXT_THRESHOLD)
+					{
+						changeAlarmStatus(true);
+						delay(RTC_BUTTON_NEXT_BUZZER_TIME);
+						changeAlarmStatus(false);
+
+						break;
+					}
+					
+					loop();
+				}
+			}
+		}
 	}
 
 	void RTCAlarm::loop()
 	{
-		uint8_t Second, Minute, Hour, DayOfWeek, DayOfMonth, Month, Year;
-
-		getTime(&Second, &Minute, &Hour, &DayOfWeek, &DayOfMonth, &Month, &Year);
+		getTime();
 
 		LCD->setCursor(0, 0);
-		LCD->print(DaysOfWeek[DayOfWeek]);
+		LCD->print(Days[Time[RTC_DAY]]);
 
 		LCD->setCursor(3, 0);
-		printZerofill(DayOfMonth);
+		printZerofill(Time[RTC_DATE]);
 		LCD->setCursor(6, 0);
-		printZerofill(Month);
+		printZerofill(Time[RTC_MONTH]);
 		LCD->setCursor(9, 0);
-		printZerofill(Year);
+		printZerofill(Time[RTC_YEAR]);
 
 		LCD->setCursor(12, 0);
-		printZerofill(Hour);
+		printZerofill(Time[RTC_HOURS]);
 		LCD->setCursor(15, 0);
-		printZerofill(Minute);
+		printZerofill(Time[RTC_MINUTES]);
 		LCD->setCursor(18, 0);
-		printZerofill(Second);
-
-		/*TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
-		TinyWireM.write(0x00);
-		TinyWireM.write(dec2bcd(Second));
-		TinyWireM.write(dec2bcd(Minute));
-		TinyWireM.write(dec2bcd(Hour));
-		TinyWireM.write(dec2bcd(DayOfWeek));
-		TinyWireM.write(dec2bcd(DayOfMonth));
-		TinyWireM.write(dec2bcd(Month));
-		TinyWireM.write(dec2bcd(Year));
-		TinyWireM.endTransmission();*/
+		printZerofill(Time[RTC_SECONDS]);
 	}
 
-	void RTCAlarm::getTime(uint8_t* Second, uint8_t* Minute, uint8_t* Hour, uint8_t* DayOfWeek, uint8_t* DayOfMonth, uint8_t* Month, uint8_t* Year)
+	void RTCAlarm::getTime()
 	{
 		// The LCD already executed begin(), so, there's no need for it
 		TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
@@ -57,13 +87,29 @@
 
 		TinyWireM.requestFrom(RTC_I2C_ADDRESS, 7);
 
-		*Second 	= bcd2dec(TinyWireM.read() & 0x7f);
-		*Minute 	= bcd2dec(TinyWireM.read());
-		*Hour 		= bcd2dec(TinyWireM.read() & 0x3f);
-		*DayOfWeek 	= bcd2dec(TinyWireM.read());
-		*DayOfMonth = bcd2dec(TinyWireM.read());
-		*Month 		= bcd2dec(TinyWireM.read());
-		*Year 		= bcd2dec(TinyWireM.read());
+		Time[RTC_SECONDS]	= bcd2dec(TinyWireM.read() & 0x7f);
+		Time[RTC_MINUTES]	= bcd2dec(TinyWireM.read());
+		Time[RTC_HOURS]		= bcd2dec(TinyWireM.read() & 0x3f);
+		Time[RTC_DAY]		= bcd2dec(TinyWireM.read());
+		Time[RTC_DATE]		= bcd2dec(TinyWireM.read());
+		Time[RTC_MONTH]		= bcd2dec(TinyWireM.read());
+		Time[RTC_YEAR]		= bcd2dec(TinyWireM.read());
+	}
+
+	void RTCAlarm::setTime()
+	{
+		TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
+		TinyWireM.write(0x00);
+
+		TinyWireM.write(dec2bcd(Time[RTC_SECONDS]));
+		TinyWireM.write(dec2bcd(Time[RTC_MINUTES]));
+		TinyWireM.write(dec2bcd(Time[RTC_HOURS]));
+		TinyWireM.write(dec2bcd(Time[RTC_DAY]));
+		TinyWireM.write(dec2bcd(Time[RTC_DATE]));
+		TinyWireM.write(dec2bcd(Time[RTC_MONTH]));
+		TinyWireM.write(dec2bcd(Time[RTC_YEAR]));
+
+		TinyWireM.endTransmission();
 	}
 
 	uint8_t RTCAlarm::getTemperature()
