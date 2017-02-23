@@ -78,11 +78,11 @@
 
 			// Print current time
 			// There's no need to floor() it because uint8_t cast in printZeroFill argument
-			printZerofill(floor(getTime(i) / 3600));
+			printZerofill(getTime(i) / 3600);
 			LCD->print(':');
-			printZerofill(floor(getTime(i) % 3600 / 60));
+			printZerofill(getTime(i) % 3600 / 60);
 			LCD->print(':');
-			printZerofill(floor(getTime(i) % 60));
+			printZerofill(getTime(i) % 60);
 		}
 	}
 

@@ -22,7 +22,6 @@
 	#include "Module_Temperature.h"
 	#include "Module_Timer.h"
 
-
 	void setup()
 	{
 		// I2C interface and LCD init
