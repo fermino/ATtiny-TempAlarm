@@ -6,6 +6,8 @@
  	#include <TinyWireM.h>
 	#include "config/RTC.h"
 
+	static const char DaysOfWeek[7][3] {RTC_DAYS_OF_WEEK};
+
 	class RTCAlarm : public TempAlarmModule
 	{
 		using TempAlarmModule::TempAlarmModule;

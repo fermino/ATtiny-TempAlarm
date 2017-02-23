@@ -15,14 +15,12 @@
 
 	void RTCAlarm::loop()
 	{
-		byte Second, Minute, Hour, DayOfWeek, DayOfMonth, Month, Year;
+		uint8_t Second, Minute, Hour, DayOfWeek, DayOfMonth, Month, Year;
 
 		getTime(&Second, &Minute, &Hour, &DayOfWeek, &DayOfMonth, &Month, &Year);
 
-		const char DaysOfWeek[7][2] = {"Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"};
 		LCD->setCursor(0, 0);
-		LCD->print(DaysOfWeek[DayOfWeek][0]);
-		LCD->print(DaysOfWeek[DayOfWeek][1]);
+		LCD->print(DaysOfWeek[DayOfWeek]);
 
 		LCD->setCursor(3, 0);
 		printZerofill(DayOfMonth);
