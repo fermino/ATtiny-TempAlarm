@@ -22,6 +22,8 @@
 	#include "Module_Temperature.h"
 	#include "Module_Timer.h"
 
+	static const uint32_t SwitchesR1[SWITCHES_AMOUNT] SWITCHES_R1;
+
 	void setup()
 	{
 		// I2C interface and LCD init
@@ -36,8 +38,6 @@
 		#endif
 
 		// OneWireSwitches
-
-		const uint32_t SwitchesR1[SWITCHES_AMOUNT] SWITCHES_R1;
 
 		OneWireSwitches<SWITCHES_AMOUNT> Switches(SWITCHES_INPUT_PIN, SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
 
@@ -54,7 +54,7 @@
 		M_Temperature.init();
 		M_Timer.init();
 
-		while(1)
+		for(;;)
 		{
 			M_RTC.loop();
 			M_Temperature.loop();
