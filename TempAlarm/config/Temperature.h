@@ -12,7 +12,7 @@
 	 * The sensor is a DS18B20, but the DS18S20 and the DS1820 should work too. 
 	 * It is connected through a OneWire bus. 
 	 */
-		
+
 		// Between -127 and 127 (as Threshold is an 8-bit integer)
 		#define TEMPERATURE_HIGHEST_THRESHOLD 127
 		#define TEMPERATURE_LOWEST_THRESHOLD -20
@@ -61,11 +61,12 @@
 
 	/**
 	 * OneWireSwitches configuration
+	 * 
+	 * ID: The index of the resistor configured in OneWireSwitches, which
+	 * is tied to the switch we want to control. 
+	 * THRESHOLD: The shortest pulse detected as a press by the firmware. 
+	 * DELAY: Time (ms) to wait after the press without reading any button. 
 	 */
-
-		#define TEMPERATURE_SWITCHES_AMOUNT 3
-
-		#define TEMPERATURE_SWITCHES_R1 220000 /* 220k */, 68000 /* 68k */, 47000 /* 47k */
 
 		#define TEMPERATURE_BUTTON_MINUS_ID 0
 		#define TEMPERATURE_BUTTON_MINUS_THRESHOLD 25
@@ -75,6 +76,7 @@
 		#define TEMPERATURE_BUTTON_PLUS_THRESHOLD 25
 		#define TEMPERATURE_BUTTON_PLUS_DELAY 50
 
+
 		#define TEMPERATURE_BUTTON_STARTSTOPDIRECTION_ID 2
 
 		#define TEMPERATURE_BUTTON_STARTSTOP_THRESHOLD 25
@@ -82,6 +84,7 @@
 
 		#define TEMPERATURE_BUTTON_DIRECTION_THRESHOLD 500
 		#define TEMPERATURE_BUTTON_DIRECTION_DELAY 500
+
 	/**
 	 * EEPROM
 	 * 
