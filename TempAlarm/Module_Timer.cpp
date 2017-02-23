@@ -86,6 +86,42 @@
 		}
 	}
 
+	void TimerAlarm::UpdateAlarmStatus()
+	{
+		// Here we turn the alarm off
+		// If any timer hasFinished(), we'll enable it again
+		AlarmOn = false;
+
+		for(uint8_t i = 0; i < TIMER_AMOUNT; i++)
+		{
+			// Print timer status
+			LCD->setCursor(0, i + 2);
+
+			if(hasFinished(i))
+			{
+				if(StatusCharacters[i])
+					LCD->print(TIMER_FINISHED_CHAR);
+				else
+					LCD->write(Timers[i].Mode + 2); // Just a trick, char's index must match every timer mode
+
+				StatusCharacters[i] = !StatusCharacters[i];
+
+				AlarmOn = true;
+			}
+			else if(Timers[i].Started)
+			{
+				if(StatusCharacters[i])
+					LCD->print(TIMER_ENABLED_CHAR);
+				else
+					LCD->write(Timers[i].Mode + 2); // Same trick as above
+
+				StatusCharacters[i] = !StatusCharacters[i];
+			}
+			else
+				LCD->write(Timers[i].Mode + 2); // Same :P
+		}
+	}
+
 	uint32_t TimerAlarm::getTime(uint8_t TimerIndex)
 	{
 		if(Timers[TimerIndex].Mode == TIMER_MODE_STOPWATCH)
@@ -159,42 +195,6 @@
 			return seconds() >= Timers[TimerIndex].StartedAt + Timers[TimerIndex].Time;
 
 		return false;
-	}
-
-	void TimerAlarm::UpdateAlarmStatus()
-	{
-		// Here we turn the alarm off
-		// If any timer hasFinished(), we'll enable it again
-		AlarmOn = false;
-
-		for(uint8_t i = 0; i < TIMER_AMOUNT; i++)
-		{
-			// Print timer status
-			LCD->setCursor(0, i + 2);
-
-			if(hasFinished(i))
-			{
-				if(StatusCharacters[i])
-					LCD->print(TIMER_FINISHED_CHAR);
-				else
-					LCD->write(Timers[i].Mode + 2); // Just a trick, char's index must match every timer mode
-
-				StatusCharacters[i] = !StatusCharacters[i];
-
-				AlarmOn = true;
-			}
-			else if(Timers[i].Started)
-			{
-				if(StatusCharacters[i])
-					LCD->print(TIMER_ENABLED_CHAR);
-				else
-					LCD->write(Timers[i].Mode + 2); // Same trick as above
-
-				StatusCharacters[i] = !StatusCharacters[i];
-			}
-			else
-				LCD->write(Timers[i].Mode + 2); // Same :P
-		}
 	}
 
 	bool TimerAlarm::isAlarmOn()

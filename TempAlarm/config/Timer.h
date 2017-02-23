@@ -80,13 +80,4 @@
 		#define TIMER_BUTTON_CONTROL_STARTSTOP_THRESHOLD 50
 		#define TIMER_BUTTON_CONTROL_STARTSTOP_DELAY 50
 
-	/**
-	 * EEPROM
-	 * 
-	 * The EEPROM can store information for a loong time. 
-	 * Here, we define in which direction will we store the 
-	 * last used temperature and alarm direction. 
-	 */
-
-
 #endif
