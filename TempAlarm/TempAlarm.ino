@@ -20,6 +20,8 @@
 	// Modules
 	#include "Module_RTC.h"
 	#include "Module_Temperature.h"
+	#include "Module_Timer.h"
+
 
 	void setup()
 	{
@@ -45,18 +47,21 @@
 
 		// Modules
 
-		RTCAlarm M_RTC(&LCD, &Switches);
-		TemperatureAlarm M_Temperature(&LCD, &Switches);
+		//RTCAlarm M_RTC(&LCD, &Switches);
+		//TemperatureAlarm M_Temperature(&LCD, &Switches);
+		TimerAlarm M_Timer(&LCD, &Switches);
 
-		M_RTC.init();
-		M_Temperature.init();
+		//M_RTC.init();
+		//M_Temperature.init();
+		M_Timer.init();
 
 		while(1)
 		{
-			M_RTC.loop();
-			M_Temperature.loop();
+			//M_RTC.loop();
+			//M_Temperature.loop();
+			M_Timer.loop();
 
-			digitalWrite(BUZZER_PIN, M_Temperature.isAlarmOn());
+			//digitalWrite(BUZZER_PIN, M_Temperature.isAlarmOn());
 		}
 	}
 

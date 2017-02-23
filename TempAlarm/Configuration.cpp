@@ -1,5 +1,6 @@
 	#include "config/RTC.h"
 	#include "config/Temperature.h"
+	#include "config/Timer.h"
 
 	/**
 	 * TempAlarm v1.0
@@ -56,22 +57,12 @@
 
 		#define SWITCHES_INPUT_PIN A2
 
-		#define SWITCHES_AMOUNT (RTC_SWITCHES_AMOUNT + TEMPERATURE_SWITCHES_AMOUNT)
+		#define SWITCHES_AMOUNT 7
 
 		// Values, over 10bit reading (102.4 => 10% over total reading)
 		#define SWITCHES_READ_TOLERANCE 25
 
-		#define SWITCHES_R1 {/*RTC_SWITCHES_R1, */TEMPERATURE_SWITCHES_R1}
-		#define SWITCHES_R2 20000 // 20k
+		#define TEMPERATURE_SWITCHES_R1 
 
-		/*const uint32_t SwitchesR1[SWITCHES_AMOUNT]
-		{
-			100000,	// 100k
-			68000,	// 68k
-			47000,	// 47k
-			20000,	// 20k
-			7800,	// 10k
-			6800,	// 6k8
-			8650,	// 3k3
-			0		// 0 ohms (switch output tied directly to the input)
-		};*/
+		#define SWITCHES_R1 {220000 /* 220k */, 68000 /* 68k */, 47000 /* 47k */, 33000 /* 33k */, 22000 /* 22k */, 18000 /* 18k */, 12000 /* 12k */}
+		#define SWITCHES_R2 20000 // 20k
