@@ -4,191 +4,41 @@
  * Add Fahrenheit (maybe Kelvin?) capabilities
  * Software backlight control
  * Calculate remaining time
+ * Add DHT22 (environment temperature)
+ * Compile modules only when enabled
  */
+	
+	#ifndef cbi
+		#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+	#endif
+	#ifndef sbi
+		#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+	#endif
 
-	// EEPROM
-	#include <avr/eeprom.h>
+	#include <avr/io.h>
 
-	// LCD
-	#include <SerialLCD.h>
-	#include <SoftwareSerial.h>
+	#include "Configuration.h"
 
-	// DS18B20 (DS1820 and DS1820 should work too)
-	#include <OneWire.h>
-	#include <DallasTemperature.h>
+ 	// I2C and LCD libs
+ 	#include <TinyWireM.h>
+	#include <LiquidCrystal_I2C.h>
 
-	// Using one analog input for read multiple pushbutons
+	// One analog input, a lot of switches :P
 	#include <OneWireSwitches.h>
+	
+	// Modules
+	#include "Module_RTC.h"
+	#include "Module_Temperature.h"
+	#include "Module_Timer.h"
 
-	/**
-	 * BEGIN CONFIG
-	 */
-
-	// Project's pinout
-
-		// ATtiny RX <-- LCD TX
-		// ATtiny TX --> LCD RX
-		#define LCD_RX_PIN 0
-		#define LCD_TX_PIN 1
-
-		// An active buzzer
-		#define BUZZER_PIN 2
-
-		// Data pin of temperature sensor
-		// Disturbs the SPI signals while programming if connected to pin 2 (or other SPI pin) 
-		#define ONE_WIRE_BUS 3
-
-		// OneWireSwitches input pin
-		#define SWITCHES_INPUT_PIN A2
-
-	// OneWireSwitches configuration
-
-		// This works by dividing voltages on only one analog input
-		// See https://learn.sparkfun.com/tutorials/voltage-dividers
-
-		// How many switches do we have?
-		#define SWITCHES_AMOUNT 4
-
-		// Define array indexes to make the code prettier :P
-		#define TEMP_PLUS_ID 2
-		#define TEMP_MINUS_ID 1
-		#define START_STOP_ID 3
-		#define CHANGE_MODE_ID 0
-
-		// What is the resistor tolerance?
-		// %, multiplied by 10, 5% should be 50
-		#define SWITCHES_RESISTOR_TOLERANCE 100
-
-		// Value of R2 in the voltage divider, the resistor tied from SWITCHES_INPUT_PIN to ground
-		#define SWITCHES_R2 10000 // 10K
-
-		// R1 values, resistors tied from SWITCHES_INPUT_PIN to every pushbutton
-		// The button input then should be tied to VCC
-		const uint32_t SwitchesR1[SWITCHES_AMOUNT]
-		{
-			100000,	// 100K
-			22000,	// 22K
-			10000,	// 10K
-			1000	// 1K
-		};
-
-	// Interface delays
-
-		// How many time the info screen will be showed at startup
-		#define AFTER_WELCOME_DELAY 3000
-
-		// Time to wait after every Temp++/-- button press WITHOUT READING
-		#define TEMP_BUTTON_DELAY 50
-
-		// Time to wait after every Start/Stop button press WITHOUT READING
-		// This will avoid multiple presses with only one click
-		#define START_STOP_BUTTON_DELAY 500
-		
-		// Time to wait after every ChangeMode button press WITHOUT READING
-		// This will avoid multiple presses with only one click
-		#define CHANGE_MODE_BUTTON_DELAY 500
-
-		// When the alarm is enabled, it will show two blinking characters in the screen
-		// How many time should we wait before switching them?
-		#define BLINKING_CHARACTER_DELAY 500
-
-	// Button thresholds
-
-		// How many time should the user press Temp++/-- in order to be detected as a press?
-		#define TEMP_BUTTON_THRESHOLD 25
-
-		// The same, with Start/Stop button
-		#define START_STOP_BUTTON_THRESHOLD 25
-
-		// Yeah, the same, you should know what button we're talking about..
-		// OKAY, RIGHT, I'M TIRED OF USING CTRL+C/CTRL+V
-		#define CHANGE_MODE_BUTTON_THRESHOLD 25
-
-	// Temperature limits and default data
-
-		// Temperature limits in the alarm config
-		// Should be between -127 and 127, as AlarmTemperature is an 8-bit integer
-		#define HIGHEST_TEMPERATURE 100
-		#define LOWEST_TEMPERATURE -20
-
-		// Default AlarmTemperature at startup if the value stored in the EEPROM is not valid
-		// Also between -127 and 127
-		#define START_TEMPERATURE 25
-
-	// LCD characters configuration
-
-		#define LCD_ALARM_ENABLED_0 '!'
-		#define LCD_ALARM_ENABLED_1 255 // a character full of black dots C:
-
-		#define LCD_ALARM_DISABLED '-'
-
-		#define LCD_REVERSE_ALARM_0 60 // >
-		#define LCD_REVERSE_ALARM_1 62 // <
-
-		#define LCD_DEGREE_CHAR 223
-
-	// Other config
-
-		// Comment it to disable
-		#define LCD_BACKLIGHT_ON
-
-		// Where is stored the last temperature?
-		#define EEPROM_TEMPERATURE_ADDRESS 0
-
-		// Where is stored the last alarm mode?
-		#define EEPROM_MODE_ADDRESS 1
-
-	/**
-	 * END CONFIG
-	 */
-
-	// This variable holds the temp that must be reached before alarm activation
-	int8_t AlarmTemperature;
-
-	bool AlarmEnabled = false;
-	bool AlarmReverse;
-
-	bool BlinkingCharacterCurrent = 1; // LCD_ALARM_ENABLED_0 will be printed first (this variable will get toggled)
-	unsigned long BlinkingCharacterUntil = 0;
-
-	// LCD library
-	SerialLCD LCD(LCD_RX_PIN, LCD_TX_PIN);
-
-	// OneWire and DallasTemperature
-	OneWire OneWireBus(ONE_WIRE_BUS);
-	DallasTemperature Sensors(&OneWireBus);
-
-	// OneWireSwitches
-	OneWireSwitches Switches(SWITCHES_INPUT_PIN, SWITCHES_AMOUNT, SwitchesR1, SWITCHES_R2, SWITCHES_RESISTOR_TOLERANCE);
+	static const uint32_t SwitchesR1[SWITCHES_AMOUNT] SWITCHES_R1;
 
 	void setup()
 	{
-		// Configure Buzzer Pin
-		pinMode(BUZZER_PIN, OUTPUT);
+		// I2C interface and LCD init
 
-		// Get data from EEPROM
-
-		AlarmTemperature = eeprom_read_byte(EEPROM_TEMPERATURE_ADDRESS);
-
-		if(AlarmTemperature < LOWEST_TEMPERATURE || AlarmTemperature > HIGHEST_TEMPERATURE)
-		{
-			AlarmTemperature = START_TEMPERATURE;
-			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
-		}
-
-		AlarmReverse = eeprom_read_byte(EEPROM_MODE_ADDRESS);
-
-		if(AlarmReverse != false && AlarmReverse != true)
-		{
-			AlarmReverse = false;
-			eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
-		}
-
-		// Init LCD
-
-		delay(100);
-
-		LCD.begin();
+		LiquidCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_COLUMNS, LCD_ROWS);
+		LCD.init();
 
 		#ifdef LCD_BACKLIGHT_ON
 			LCD.backlight();
@@ -196,197 +46,43 @@
 			LCD.noBacklight();
 		#endif
 
-		// Init OneWire and DallasTemperature
-		Sensors.begin();
+		// OneWireSwitches
 
-		// Allows us to perform readings while the sensor is reading
-		Sensors.setWaitForConversion(false);
+		OneWireSwitches<SWITCHES_AMOUNT> Switches(SWITCHES_INPUT_PIN, SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
 
-		// Start a reading, we want to have a stable value as soon as possible
-		Sensors.requestTemperatures(); // Sensors.requestTemperaturesByIndex(0); uses around 200 more bytes of flash
+		// Set buzzer pin as output
+		// pinMode(BUZZER_PIN, OUTPUT);
+		sbi(BUZZER_DDR, BUZZER_BIT);
 
-		// Print some info
-		// Can be commented if you need more flash for improvements
+		// Modules
 
-		LCD.home();
-		LCD.print(" TempAlarm v0.1");
-		LCD.setCursor(0, 1);
-		LCD.print("  By @fermino");
+		RTCAlarm M_RTC(&LCD, &Switches);
+		TemperatureAlarm M_Temperature(&LCD, &Switches);
+		TimerAlarm M_Timer(&LCD, &Switches);
 
-		delay(AFTER_WELCOME_DELAY);
+		M_RTC.init();
+		M_Temperature.init();
+		M_Timer.init();
 
-		// LCD template (this characters will never be erased :P)
+		for(;;)
+		{
+			M_RTC.loop();
+			M_Temperature.loop();
+			M_Timer.loop();
 
-		LCD.clear();
-		LCD.home(); // Needed, else the characters get written in the first row
+			setAlarmStatus(M_RTC.isAlarmOn() || M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
+		}
+	}
 
-		LCD.print("Alarm: ");
-		LCD.setCursor(12, 0);
-		LCD.print(LCD_DEGREE_CHAR);
-		LCD.print('C');
+	void setAlarmStatus(bool Enabled)
+	{
+		// digitalWrite(BUZZER_PIN, Enabled);
 
-		LCD.setCursor(0, 1);
-		LCD.print("Temp: ");
-		LCD.setCursor(12, 1);
-		LCD.print(LCD_DEGREE_CHAR);
-		LCD.print('C');
-
-		ClearBlinkingCharacter();
-		UpdateModeCharacter();
+		if(Enabled)
+			sbi(BUZZER_PORT, BUZZER_BIT);
+		else
+			cbi(BUZZER_PORT, BUZZER_BIT);
 	}
 
 	void loop()
-	{
-		// ReadPulse should not return anything higher than Timeout, but well, using >= instead ==
-		// has no effect over flash/memory usage, so, it can avoid further problems if code gets changed
-
-		if(ReadPulse(TEMP_PLUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD)
-		{
-			// If the user pressed Temp++
-
-			// Limit temperature
-			if(AlarmTemperature < HIGHEST_TEMPERATURE)
-				AlarmTemperature++;
-
-			delay(TEMP_BUTTON_DELAY);
-		}
-		else if(ReadPulse(TEMP_MINUS_ID, TEMP_BUTTON_THRESHOLD) >= TEMP_BUTTON_THRESHOLD)
-		{
-			// If the user pressed Temp--
-
-			// Limit temperature
-			if(AlarmTemperature > LOWEST_TEMPERATURE)
-				AlarmTemperature--;
-
-			delay(TEMP_BUTTON_DELAY);
-		}
-		else if(ReadPulse(START_STOP_ID, START_STOP_BUTTON_THRESHOLD) >= START_STOP_BUTTON_THRESHOLD)
-		{
-			// If the user pressed Start/Stop
-
-			if(AlarmEnabled)
-			{
-				// If the alarm is enabled we disable it and drive buzzer LOW (even if the alarm was not triggered)
-				// Then, we write LCD_ALARM_DISABLED in the display, as alarm enable flag
-
-				digitalWrite(BUZZER_PIN, LOW);
-
-				ClearBlinkingCharacter();
-
-				AlarmEnabled = false;
-			}
-			else
-				AlarmEnabled = true; // If the alarm is not enabled, we'll make it happen
-
-			// And, we store the temperature and the mode in the EEPROM
-			// We do this here and not when the user changes the temperature to preserve the EEPROM life cycle
-			eeprom_update_byte(EEPROM_TEMPERATURE_ADDRESS, AlarmTemperature);
-			eeprom_update_byte(EEPROM_MODE_ADDRESS, AlarmReverse);
-
-			delay(START_STOP_BUTTON_DELAY);
-		}
-		else if(ReadPulse(CHANGE_MODE_ID, CHANGE_MODE_BUTTON_THRESHOLD) >= CHANGE_MODE_BUTTON_THRESHOLD)
-		{
-			// If the user pressed ChangeMode
-
-			AlarmReverse = !AlarmReverse;
-
-			UpdateModeCharacter();
-
-			delay(CHANGE_MODE_BUTTON_DELAY);
-		}
-
-		// Show AlarmTemperature
-
-		LCD.setCursor(7, 0);
-		LCD.print(AlarmTemperature < 0 ? '-' : ' ');
-		LCD.print((unsigned long) abs(AlarmTemperature), DEC);
-		LCD.print(' ');
-
-		// Show current temperature at sensor
-
-		float Temperature = Sensors.getTempCByIndex(0);
-
-		if(Temperature != DEVICE_DISCONNECTED_C)
-		{
-			LCD.setCursor(6, 1);
-			LCD.print(Temperature < 0 ? '-' : ' ');
-			LCD.print((unsigned long) abs(Temperature), DEC);
-			LCD.print('.');
-			LCD.print((Temperature - (long) Temperature) * 10, DEC);
-			LCD.print(' ');
-		}
-		else
-		{
-			// If the sensor gets disconnected, we'll print it
-
-			LCD.clear();
-			LCD.home();
-			LCD.print("Sensor");
-			LCD.setCursor(4, 1);
-			LCD.print("disconnected");
-
-			while(1);
-		}
-
-		// Do some alarm things (?
-
-		if(AlarmEnabled)
-		{
-			// Write some status info in the LCD
-
-			UpdateBlinkingCharacter();
-
-			// If the threshold is obove or below the setted temperature, activate the alarm
-
-			if(!AlarmReverse && Temperature >= AlarmTemperature)
-				digitalWrite(BUZZER_PIN, HIGH);
-			
-			if(AlarmReverse && Temperature <= AlarmTemperature)
-				digitalWrite(BUZZER_PIN, HIGH);
-		}
-
-		// Perform another reading
-
-		Sensors.requestTemperatures();
-	}
-
-	// Reads a pulse from a button and returns the time since the press
-	// Returns 0 if the button is not pressed
-	uint16_t ReadPulse(uint8_t KeyIndex, uint16_t Timeout)
-	{
-		uint16_t Time = 0;
-
-		while(Switches.readKey(KeyIndex) == HIGH && Time < Timeout)
-		{
-			Time++;
-			delay(1);
-		}
-
-		return Time;
-	}
-
-	void UpdateBlinkingCharacter()
-	{
-		if(millis() >= BlinkingCharacterUntil)
-		{
-			LCD.setCursor(15, 0);
-
-			LCD.print(BlinkingCharacterCurrent ? LCD_ALARM_ENABLED_0 : LCD_ALARM_ENABLED_1);
-
-			BlinkingCharacterCurrent = !BlinkingCharacterCurrent;
-			BlinkingCharacterUntil = millis() + BLINKING_CHARACTER_DELAY;
-		}
-	}
-
-	void ClearBlinkingCharacter()
-	{
-		LCD.setCursor(15, 0);
-		LCD.print(LCD_ALARM_DISABLED);
-	}
-
-	void UpdateModeCharacter()
-	{
-		LCD.setCursor(15, 1);
-		LCD.print(AlarmReverse ? LCD_REVERSE_ALARM_0 : LCD_REVERSE_ALARM_1);
-	}
+	{}
