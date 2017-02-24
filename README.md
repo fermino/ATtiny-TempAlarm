@@ -24,7 +24,7 @@ The DS18B20 can ork in two different modes:
 The LCD with the ATtiny running at 8MHz works very well. 
 This fuses enable preserve EEPROM (avoid clearing up on every code flash) and bronout detection at 2.7V (can be powered by a LiPo battery, assuming your display works with theese voltages). 
 
-Low fuse: 0xe2
+Low fuse: 0xe2  
 High fuse: 0xd5  
 Extended fuse: 0xff  
 
