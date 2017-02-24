@@ -6,7 +6,7 @@
 	#include <avr/eeprom.h>
 	#include <OneWire.h>
 
-	#include "Configuration.cpp"
+	#include "Configuration.h"
 	#include "config/Temperature.h"
 
 	class TemperatureAlarm : public TempAlarmModule

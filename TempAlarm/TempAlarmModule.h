@@ -4,7 +4,7 @@
 	#include <LiquidCrystal_I2C.h>
 	#include <OneWireSwitches.h>
 
-	#include "Configuration.cpp"
+	#include "Configuration.h"
 
 	class TempAlarmModule
 	{

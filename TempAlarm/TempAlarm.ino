@@ -17,7 +17,7 @@
 
 	#include <avr/io.h>
 
-	#include "Configuration.cpp"
+	#include "Configuration.h"
 
  	// I2C and LCD libs
  	#include <TinyWireM.h>
@@ -77,6 +77,7 @@
 	void setAlarmStatus(bool Enabled)
 	{
 		// digitalWrite(BUZZER_PIN, Enabled);
+
 		if(Enabled)
 			sbi(BUZZER_PORT, BUZZER_BIT);
 		else
