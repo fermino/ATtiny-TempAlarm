@@ -6,7 +6,7 @@ A programable temperature alarm with ATtiny85, DS18B20 temperature sensor and an
 I made a schematic and a PCB of the project using DipTrace; you can find it inside hardware/.
 
 The LCD and RTC is connected to the I2C USI port (SDA <=> Pin 5, SCL <=> Pin 7). 
-The temperature sensor (DS18B20, OneWire) is connected in the digital i/o #3 (Pin 2). 
+The temperature sensor (DS18B20, OneWire; DS18S20 and DS1820 should work too) is connected in the digital i/o #3 (Pin 2). 
 The buzzer is connected to digital output #1 (Pin 6). 
 The input used by OneWireSwitches lib is A2 (Pin 3). 
 
