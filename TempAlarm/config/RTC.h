@@ -10,6 +10,12 @@
 		#define RTC_MONTHS "ene\0", "feb\0", "mar\0", "abr\0", "may\0", "jun\0", "jul\0", "ago\0", "sep\0", "oct\0", "nov\0", "dic\0"
 
 	/**
+	 * LCD configuration
+	 */
+
+		#define RTC_DEGREE_CHAR ((char) 223)
+
+	/**
 	 * OneWireSwitches configuration
 	 */
 

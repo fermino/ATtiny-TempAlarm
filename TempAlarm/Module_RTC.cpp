@@ -7,9 +7,11 @@
 		LCD->setCursor(17, 0);
 		LCD->print(':');
 
-		LCD->setCursor(18, 2);
-		// Warning, we're using Temperature's defines
-		LCD->print(TEMPERATURE_DEGREE_CHAR);
+		LCD->setCursor(12, 2);
+		LCD->print("Temp:");
+
+		LCD->setCursor(17, 3);
+		LCD->print(RTC_DEGREE_CHAR);
 		LCD->print('C');
 
 		if(Switches->readKey(RTC_BUTTON_CONFIGURE_ID))
@@ -79,7 +81,7 @@
 		LCD->setCursor(18, 0);
 		printZerofill(Time[RTC_SECONDS]);
 
-		LCD->setCursor(15, 2);
+		LCD->setCursor(14, 3);
 		LCD->print(getTemperature());
 	}
 
