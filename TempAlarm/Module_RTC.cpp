@@ -22,8 +22,6 @@
 			delay(RTC_BUTTON_CONFIGURE_BUZZER_TIME);
 			setAlarmStatus(false);
 
-			delay(RTC_BUTTON_CONFIGURE_DELAY);
-
 			for(int8_t ByteToConfigure = 6; ByteToConfigure >= 0; ByteToConfigure--)
 			{
 				for(;;)
