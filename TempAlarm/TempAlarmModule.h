@@ -10,7 +10,7 @@
 	{
 		protected: 
 			LiquidCrystal_I2C* LCD;
-			OneWireSwitches<SWITCHES_AMOUNT>* Switches;
+			OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN>* Switches;
 
 			// Some utils
 
@@ -18,7 +18,7 @@
 
 		public:
 			// Can't we mark this as final
-			TempAlarmModule(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S);
+			TempAlarmModule(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN>* S);
 
 			virtual void init() = 0;
 			virtual void loop() = 0;

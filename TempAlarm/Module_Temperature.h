@@ -36,7 +36,7 @@
 			void UpdateDirection();
 
 		public:
-			TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S);
+			TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN>* S);
 
 			void init();
 			void loop();

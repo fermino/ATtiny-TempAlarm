@@ -7,7 +7,7 @@
 
 	#include "Module_Temperature.h"
 
-	TemperatureAlarm::TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT>* S)
+	TemperatureAlarm::TemperatureAlarm(LiquidCrystal_I2C* L, OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN>* S)
 	: TempAlarmModule(L, S)
 	{}
 

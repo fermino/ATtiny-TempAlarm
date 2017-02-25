@@ -48,7 +48,7 @@
 
 		// OneWireSwitches
 
-		OneWireSwitches<SWITCHES_AMOUNT> Switches(SWITCHES_INPUT_PIN, SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
+		OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN> Switches(SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
 
 		// Set buzzer pin as output
 		// pinMode(BUZZER_PIN, OUTPUT);
@@ -70,7 +70,7 @@
 			M_Temperature.loop();
 			M_Timer.loop();
 
-			setAlarmStatus(M_RTC.isAlarmOn() || M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
+			setAlarmStatus(/*M_RTC.isAlarmOn() || */ M_Temperature.isAlarmOn() || M_Timer.isAlarmOn());
 		}
 	}
 
