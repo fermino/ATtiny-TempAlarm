@@ -27,31 +27,7 @@
 			Switches->readKeyPulse(TIMER_BUTTON_ADD_SECOND_ID, TIMER_BUTTON_ADD_THRESHOLD) >= TIMER_BUTTON_ADD_THRESHOLD ? 1 : 0
 		);
 
-		uint16_t PulseLength = Switches->readKeyPulse(TIMER_BUTTON_CONTROL_ID, TIMER_BUTTON_CONTROL_RESET_THRESHOLD);
-
-		if(PulseLength >= TIMER_BUTTON_CONTROL_RESET_THRESHOLD)
-		{
-			reset(Selected);
-
-			printTime();
-
-			delay(TIMER_BUTTON_CONTROL_RESET_DELAY);
-		}
-		else if(PulseLength >= TIMER_BUTTON_CONTROL_SWITCH_THRESHOLD)
-		{
-			if((++Selected) == TIMER_AMOUNT)
-				Selected = 0;
-
-			/*if(Selected < TIMER_AMOUNT - 1)
-				Selected++;
-			else
-				Selected = 0;*/
-
-			printTime();
-
-			delay(TIMER_BUTTON_CONTROL_SWITCH_DELAY);
-		}
-		else if(PulseLength >= TIMER_BUTTON_CONTROL_STARTSTOP_THRESHOLD)
+		if(Switches->readKeyPulse(TIMER_BUTTON_STARTSTOP_ID, TIMER_BUTTON_STARTSTOP_THRESHOLD) >= TIMER_BUTTON_STARTSTOP_THRESHOLD)
 		{
 			if(Timers[Selected].Started)
 				stop(Selected);
@@ -60,7 +36,34 @@
 
 			printTime();
 
-			delay(TIMER_BUTTON_CONTROL_STARTSTOP_DELAY);
+			delay(TIMER_BUTTON_STARTSTOP_DELAY);
+		}
+		else
+		{
+			uint16_t PulseLength = Switches->readKeyPulse(TIMER_BUTTON_CONTROL_ID, TIMER_BUTTON_CONTROL_RESET_THRESHOLD);
+
+			if(PulseLength >= TIMER_BUTTON_CONTROL_RESET_THRESHOLD)
+			{
+				reset(Selected);
+
+				printTime();
+
+				delay(TIMER_BUTTON_CONTROL_RESET_DELAY);
+			}
+			else if(PulseLength >= TIMER_BUTTON_CONTROL_SWITCH_THRESHOLD)
+			{
+				if((++Selected) == TIMER_AMOUNT)
+					Selected = 0;
+
+				/*if(Selected < TIMER_AMOUNT - 1)
+					Selected++;
+				else
+					Selected = 0;*/
+
+				printTime();
+
+				delay(TIMER_BUTTON_CONTROL_SWITCH_DELAY);
+			}
 		}
 
 		// Print time :P

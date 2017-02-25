@@ -63,7 +63,14 @@
 		// ReadPulse should not return anything higher than Timeout, but well, using >= instead ==
 		// has no effect over flash/memory usage, so, it can avoid further problems if code gets changed
 
-		if(Switches->readKeyPulse(TEMPERATURE_BUTTON_MINUS_ID, TEMPERATURE_BUTTON_MINUS_THRESHOLD) >= TEMPERATURE_BUTTON_MINUS_THRESHOLD)
+		if(Switches->readKeyPulse(TEMPERATURE_BUTTON_DIRECTION_ID, TEMPERATURE_BUTTON_DIRECTION_THRESHOLD) >= TEMPERATURE_BUTTON_DIRECTION_THRESHOLD)
+		{
+			DirectionUp = !DirectionUp;
+			UpdateDirection();
+
+			delay(TEMPERATURE_BUTTON_DIRECTION_DELAY);
+		}
+		else if(Switches->readKeyPulse(TEMPERATURE_BUTTON_MINUS_ID, TEMPERATURE_BUTTON_MINUS_THRESHOLD) >= TEMPERATURE_BUTTON_MINUS_THRESHOLD)
 		{
 			if(Threshold > TEMPERATURE_LOWEST_THRESHOLD)
 				Threshold--;
@@ -77,16 +84,7 @@
 
 			delay(TEMPERATURE_BUTTON_PLUS_DELAY);
 		}
-
-		uint16_t PulseLength = Switches->readKeyPulse(TEMPERATURE_BUTTON_STARTSTOPDIRECTION_ID, TEMPERATURE_BUTTON_DIRECTION_THRESHOLD);
-		if(PulseLength >= TEMPERATURE_BUTTON_DIRECTION_THRESHOLD)
-		{
-			DirectionUp = !DirectionUp;
-			UpdateDirection();
-
-			delay(TEMPERATURE_BUTTON_DIRECTION_DELAY);
-		}
-		else if(PulseLength >= TEMPERATURE_BUTTON_STARTSTOP_THRESHOLD)
+		else if(Switches->readKeyPulse(TEMPERATURE_BUTTON_STARTSTOP_ID, TEMPERATURE_BUTTON_STARTSTOP_THRESHOLD) >= TEMPERATURE_BUTTON_STARTSTOP_THRESHOLD)
 		{
 			AlarmOn = false;
 

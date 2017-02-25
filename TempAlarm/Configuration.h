@@ -61,12 +61,10 @@
 
 		#define SWITCHES_INPUT_PIN A2
 
-		#define SWITCHES_AMOUNT 7
+		#define SWITCHES_AMOUNT 9
 
 		// Values, over 10bit reading (102.4 => 10% over total reading)
 		#define SWITCHES_READ_TOLERANCE 25
 
-		#define TEMPERATURE_SWITCHES_R1 
-
-		#define SWITCHES_R1 {220000 /* 220k */, 68000 /* 68k */, 47000 /* 47k */, 33000 /* 33k */, 22000 /* 22k */, 18000 /* 18k */, 12000 /* 12k */}
+		#define SWITCHES_R1 {220000 /* 220k */, 68000 /* 68k */, 47000 /* 47k */, 33000 /* 33k */, 22000 /* 22k */, 18000 /* 18k */, 12000 /* 12k */, 6800 /* 6k8 */, 0 /* 0 ohms, yeah, just a cable :P */}
 		#define SWITCHES_R2 20000 // 20k
