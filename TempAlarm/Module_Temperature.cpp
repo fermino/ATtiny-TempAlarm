@@ -111,7 +111,7 @@
 	{
 		LCD->setCursor(4, 1);
 
-		int8_t Temperature = NULL;
+		int8_t Temperature = -127;
 		uint8_t DecimalPart = 0;
 
 		// If the found (or not) address is a recognized one
@@ -136,7 +136,7 @@
 			}
 		}
 
-		if(Temperature != NULL)
+		if(Temperature != -127)
 		{
 			// Print it :P
 			LCD->print(Temperature);
