@@ -119,7 +119,7 @@
 		TinyWireM.endTransmission();
 	}
 
-	uint8_t RTCAlarm::getTemperature()
+	int8_t RTCAlarm::getTemperature()
 	{
 		TinyWireM.beginTransmission(RTC_I2C_ADDRESS);
 		TinyWireM.write(0x11); // 011h

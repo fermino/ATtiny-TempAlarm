@@ -35,7 +35,7 @@
 			void getTime();
 			void setTime();
 
-			uint8_t getTemperature();
+			int8_t getTemperature();
 
 			inline uint8_t dec2bcd(uint8_t dec)
 			{ return (dec / 10 * 16) + (dec % 10); }
