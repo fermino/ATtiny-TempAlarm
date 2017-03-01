@@ -17,7 +17,6 @@
 		private:
 			struct Timer
 			{
-				bool Started = false;
 				uint8_t Mode = TIMER_MODE_STOPWATCH;
 
 				uint32_t StartedAt = 0;
@@ -40,6 +39,7 @@
 			void stop(uint8_t TimerIndex);
 			void reset(uint8_t TimerIndex);
 
+			inline bool isStarted(uint8_t TimerIndex) { return (Timers[TimerIndex].StartedAt > 0); }
 			bool hasFinished(uint8_t TimerIndex);
 
 			// Timers

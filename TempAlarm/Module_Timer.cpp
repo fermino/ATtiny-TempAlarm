@@ -29,7 +29,7 @@
 
 		if(Switches->readKeyPulse(TIMER_BUTTON_STARTSTOP_ID, TIMER_BUTTON_STARTSTOP_THRESHOLD) >= TIMER_BUTTON_STARTSTOP_THRESHOLD)
 		{
-			if(Timers[Selected].Started)
+			if(isStarted(Selected))
 				stop(Selected);
 			else
 				start(Selected);
@@ -111,7 +111,7 @@
 
 				AlarmOn = true;
 			}
-			else if(Timers[i].Started)
+			else if(isStarted(i))
 			{
 				if(StatusCharacters[i])
 					LCD->print(TIMER_ENABLED_CHAR);
@@ -129,7 +129,7 @@
 	{
 		if(Timers[TimerIndex].Mode == TIMER_MODE_STOPWATCH)
 		{
-			if(Timers[TimerIndex].Started)
+			if(isStarted(TimerIndex))
 			{
 				// Save current ELAPSED time, then stop() will only pause the stopwatch
 				Timers[TimerIndex].Time = seconds() - Timers[TimerIndex].StartedAt;
@@ -149,7 +149,7 @@
 		else
 		{
 			// If is not started or has already finished, we'll return the set time
-			if(!Timers[TimerIndex].Started || hasFinished(TimerIndex))
+			if(!isStarted(TimerIndex) || hasFinished(TimerIndex))
 				return Timers[TimerIndex].Time;
 
 			return Timers[TimerIndex].StartedAt + Timers[TimerIndex].Time - seconds();
@@ -173,14 +173,11 @@
 	void TimerAlarm::start(uint8_t TimerIndex)
 	{
 		Timers[TimerIndex].StartedAt = seconds() - (Timers[TimerIndex].Mode == TIMER_MODE_STOPWATCH ? Timers[TimerIndex].Time : 0);
-
-		Timers[TimerIndex].Started = true;
 	}
 
 	void TimerAlarm::stop(uint8_t TimerIndex)
 	{
 		Timers[TimerIndex].StartedAt = 0;
-		Timers[TimerIndex].Started = false;
 	}
 
 	void TimerAlarm::reset(uint8_t TimerIndex)
@@ -194,7 +191,7 @@
 
 	bool TimerAlarm::hasFinished(uint8_t TimerIndex)
 	{
-		if(Timers[TimerIndex].Started && Timers[TimerIndex].Mode == TIMER_MODE_COUNTDOWN)
+		if(isStarted(TimerIndex) && Timers[TimerIndex].Mode == TIMER_MODE_COUNTDOWN)
 			return seconds() >= Timers[TimerIndex].StartedAt + Timers[TimerIndex].Time;
 
 		return false;
