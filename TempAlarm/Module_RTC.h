@@ -14,8 +14,8 @@
 	#define RTC_MONTH	5
 	#define RTC_YEAR	6
 
-	static const char Days[7][4] {RTC_DAYS};
-	static const char Months[12][4] {RTC_MONTHS};
+	static const char Days[7][4]	{RTC_DAY_0, RTC_DAY_1, RTC_DAY_2, RTC_DAY_3, RTC_DAY_4, RTC_DAY_5, RTC_DAY_6};
+	static const char Months[12][4]	{RTC_MONTH_0, RTC_MONTH_1, RTC_MONTH_2, RTC_MONTH_3, RTC_MONTH_4, RTC_MONTH_5, RTC_MONTH_6, RTC_MONTH_7, RTC_MONTH_8, RTC_MONTH_9, RTC_MONTH_10, RTC_MONTH_11};
 
 	extern void setAlarmStatus(bool Enabled);
 

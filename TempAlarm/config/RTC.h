@@ -6,8 +6,26 @@
 		//#define RTC_HW DS3231
 		#define RTC_I2C_ADDRESS 0x68
 
-		#define RTC_DAYS "Dom\0", "Lun\0", "Mar\0", "Mie\0", "Jue\0", "Vie\0", "Sab\0"
-		#define RTC_MONTHS "ene\0", "feb\0", "mar\0", "abr\0", "may\0", "jun\0", "jul\0", "ago\0", "sep\0", "oct\0", "nov\0", "dic\0"
+		#define RTC_DAY_0 "Dom\0"
+		#define RTC_DAY_1 "Lun\0"
+		#define RTC_DAY_2 "Mar\0"
+		#define RTC_DAY_3 "Mie\0"
+		#define RTC_DAY_4 "Jue\0"
+		#define RTC_DAY_5 "Vie\0"
+		#define RTC_DAY_6 "Sab\0"
+
+		#define RTC_MONTH_0		"ene\0"
+		#define RTC_MONTH_1		"feb\0"
+		#define RTC_MONTH_2		"mar\0"
+		#define RTC_MONTH_3		"abr\0"
+		#define RTC_MONTH_4		"may\0"
+		#define RTC_MONTH_5		"jun\0"
+		#define RTC_MONTH_6		"jul\0"
+		#define RTC_MONTH_7		"ago\0"
+		#define RTC_MONTH_8		"sep\0"
+		#define RTC_MONTH_9		"oct\0"
+		#define RTC_MONTH_10	"nov\0"
+		#define RTC_MONTH_11	"dic\0"
 
 	/**
 	 * LCD configuration
