@@ -19,11 +19,7 @@
 
 		// Print template
 		LCD->setCursor(0, 1);
-		LCD->print(TEMPERATURE_DEGREE_CHAR);
-		LCD->print("C:");
-
-		LCD->setCursor(10, 1);
-		LCD->print("Al:");
+		LCD->print("Sens:");
 
 		UpdateDirection();
 
@@ -104,12 +100,13 @@
 		if(Threshold >= 0 && Threshold < 100)
 			LCD->print(' ');
 		LCD->print(Threshold);
+		LCD->print(TEMPERATURE_DEGREE_CHAR);
 		LCD->print(' ');
 	}
 
 	void TemperatureAlarm::UpdateTemperature()
 	{
-		LCD->setCursor(4, 1);
+		LCD->setCursor(5, 1);
 
 		int8_t Temperature = -127;
 		uint8_t DecimalPart = 0;
@@ -139,9 +136,12 @@
 		if(Temperature != -127)
 		{
 			// Print it :P
+			if(Temperature >= 0 && Temperature < 100)
+				LCD->print(' ');
 			LCD->print(Temperature);
 			LCD->print('.');
 			LCD->print(DecimalPart);
+			LCD->print(TEMPERATURE_DEGREE_CHAR);
 			LCD->print(' ');
 
 			// If the temperature is above or below the given temperature, activate the alarm
@@ -152,7 +152,7 @@
 		}
 		else
 		{
-			LCD->print("-----");
+			LCD->print(" ----- ");
 
 			if(Enabled)
 				AlarmOn = true;
@@ -175,7 +175,7 @@
 
 	void TemperatureAlarm::UpdateDirection()
 	{
-		LCD->setCursor(18, 1);
+		LCD->setCursor(12, 1);
 		LCD->write(DirectionUp ? TEMPERATURE_DIRECTION_UP_CHAR_INDEX : TEMPERATURE_DIRECTION_DOWN_CHAR_INDEX);
 	}
 

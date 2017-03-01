@@ -8,11 +8,7 @@
 		LCD->print(':');
 
 		LCD->setCursor(12, 2);
-		LCD->print("Temp:");
-
-		LCD->setCursor(17, 3);
-		LCD->print(RTC_DEGREE_CHAR);
-		LCD->print('C');
+		LCD->print("Ambiente");
 
 		if(Switches->readKey(RTC_BUTTON_CONFIGURE_ID))
 		{
@@ -81,6 +77,8 @@
 
 		LCD->setCursor(14, 3);
 		LCD->print(getTemperature());
+		LCD->print(RTC_DEGREE_CHAR);
+		LCD->print("C ");
 	}
 
 	void RTCAlarm::getTime()
