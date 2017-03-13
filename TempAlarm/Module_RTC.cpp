@@ -27,7 +27,6 @@
 						if(Time[ByteToConfigure] > TimeLowerLimits[ByteToConfigure])
 						{
 							Time[ByteToConfigure]--;
-							setTime();
 						}
 					}
 					else if(Switches->readKeyPulse(RTC_BUTTON_PLUS_ID, RTC_BUTTON_PLUS_THRESHOLD) >= RTC_BUTTON_PLUS_THRESHOLD)
@@ -35,7 +34,6 @@
 						if(Time[ByteToConfigure] < TimeUpperLimits[ByteToConfigure])
 						{
 							Time[ByteToConfigure]++;
-							setTime();
 						}
 					}
 					
@@ -49,7 +47,8 @@
 
 						break;
 					}
-					
+
+					setTime();
 					loop();
 				}
 			}
