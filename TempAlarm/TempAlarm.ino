@@ -31,13 +31,23 @@
 	#include "Module_Temperature.h"
 	#include "Module_Timer.h"
 
+	// LCD
+	LiquidCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_COLUMNS, LCD_ROWS);
+
+	// OneWireSwitches
 	static const uint32_t SwitchesR1[SWITCHES_AMOUNT] SWITCHES_R1;
+	OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN> Switches(SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
+
+	// Modules
+
+	RTCAlarm M_RTC(&LCD, &Switches);
+	TemperatureAlarm M_Temperature(&LCD, &Switches);
+	TimerAlarm M_Timer(&LCD, &Switches);
 
 	void setup()
 	{
 		// I2C interface and LCD init
 
-		LiquidCrystal_I2C LCD(LCD_I2C_ADDRESS, LCD_COLUMNS, LCD_ROWS);
 		LCD.init();
 
 		#ifdef LCD_BACKLIGHT_ON
@@ -46,19 +56,11 @@
 			LCD.noBacklight();
 		#endif
 
-		// OneWireSwitches
-
-		OneWireSwitches<SWITCHES_AMOUNT, SWITCHES_INPUT_PIN> Switches(SwitchesR1, SWITCHES_R2, SWITCHES_READ_TOLERANCE);
-
 		// Set buzzer pin as output
 		// pinMode(BUZZER_PIN, OUTPUT);
 		sbi(BUZZER_DDR, BUZZER_BIT);
 
-		// Modules
-
-		RTCAlarm M_RTC(&LCD, &Switches);
-		TemperatureAlarm M_Temperature(&LCD, &Switches);
-		TimerAlarm M_Timer(&LCD, &Switches);
+		// Init modules
 
 		M_RTC.init();
 		M_Temperature.init();
