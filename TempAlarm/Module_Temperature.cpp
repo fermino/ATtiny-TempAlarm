@@ -41,13 +41,13 @@
 	{
 		// Timers
 
-		if(millis() >= (UpdateTemperature_StartedAt + TEMPERATURE_CONVERSION_TIME))
+		if((millis() - UpdateTemperature_StartedAt) >= TEMPERATURE_CONVERSION_TIME)
 		{
 			UpdateTemperature_StartedAt = millis();
 
 			UpdateTemperature();
 		}
-		if(millis() >= (UpdateStatus_StartedAt + TEMPERATURE_STATUS_UPDATE_DELAY))
+		if((millis() - UpdateStatus_StartedAt) >= TEMPERATURE_STATUS_UPDATE_DELAY)
 		{
 			UpdateStatus_StartedAt = millis();
 

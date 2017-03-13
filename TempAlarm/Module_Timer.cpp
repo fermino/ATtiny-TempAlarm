@@ -11,7 +11,7 @@
 	{
 		// Timers
 
-		if(millis() >= (UpdateAlarmStatus_StartedAt + TIMER_STATUS_UPDATE_DELAY))
+		if((millis() - UpdateAlarmStatus_StartedAt) >= TIMER_STATUS_UPDATE_DELAY)
 		{
 			UpdateAlarmStatus_StartedAt = millis();
 
