@@ -3,12 +3,10 @@
 	void RTCAlarm::init()
 	{
 		LCD->setCursor(14, 0);
-		LCD->print(':');
-		LCD->setCursor(17, 0);
-		LCD->print(':');
+		LCD->print(":  :");
 
 		LCD->setCursor(12, 2);
-		LCD->print("Ambiente");
+		LCD->print(F("Ambiente"));
 
 		if(Switches->readKey(RTC_BUTTON_CONFIGURE_ID))
 		{
