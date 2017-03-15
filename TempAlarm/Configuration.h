@@ -30,13 +30,13 @@
 	 * in the firmware, you can change them if you want :)
 	 */
 
-	#define LCD_I2C_ADDRESS 0x27
+		#define LCD_I2C_ADDRESS 0x27
 
-	#define LCD_COLUMNS 20
-	#define LCD_ROWS 4
+		#define LCD_COLUMNS 20
+		#define LCD_ROWS 4
 
-	// Comment to disable
-	#define LCD_BACKLIGHT_ON
+		// Comment to disable+
+		#define LCD_BACKLIGHT_ON
 
 	/**
 	 * OneWireSwitches configuration
