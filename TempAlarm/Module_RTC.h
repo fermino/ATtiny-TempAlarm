@@ -27,8 +27,8 @@
 			bool AlarmOn = false;
 
 			// Seconds, minutes, hours, day, date, month, year
-			const uint8_t TimeUpperLimits[7] {59, 59, 23, 6, 31, 12, 99};
-			const uint8_t TimeLowerLimits[7] { 0,  0,  0, 0,  1,  1,  0};
+			const uint8_t TimeUpperLimits[7] {59, 59, 23, 7, 31, 12, 99};
+			const uint8_t TimeLowerLimits[7] { 0,  0,  0, 1,  1,  1,  0};
 
 			uint8_t Time[7];
 

@@ -58,7 +58,7 @@
 		getTime();
 
 		LCD->setCursor(0, 0);
-		LCD->print(Days[Time[RTC_DAY]]);
+		LCD->print(Days[Time[RTC_DAY] - 1]);
 
 		LCD->setCursor(4, 0);
 		printZerofill(Time[RTC_DATE]);
