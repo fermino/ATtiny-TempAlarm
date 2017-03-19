@@ -90,7 +90,8 @@
 		Time[RTC_SECONDS]	= bcd2dec(TinyWireM.read() & 0x7f);
 		Time[RTC_MINUTES]	= bcd2dec(TinyWireM.read());
 		Time[RTC_HOURS]		= bcd2dec(TinyWireM.read() & 0x3f);
-		Time[RTC_DAY]		= bcd2dec(TinyWireM.read());
+		// From 1 to 7, does not need bcd2dec() => saves 14 bytes
+		Time[RTC_DAY]		= TinyWireM.read();
 		Time[RTC_DATE]		= bcd2dec(TinyWireM.read());
 		Time[RTC_MONTH]		= bcd2dec(TinyWireM.read());
 		Time[RTC_YEAR]		= bcd2dec(TinyWireM.read());
@@ -104,7 +105,8 @@
 		TinyWireM.write(dec2bcd(Time[RTC_SECONDS]));
 		TinyWireM.write(dec2bcd(Time[RTC_MINUTES]));
 		TinyWireM.write(dec2bcd(Time[RTC_HOURS]));
-		TinyWireM.write(dec2bcd(Time[RTC_DAY]));
+		// Same as above
+		TinyWireM.write(Time[RTC_DAY]);
 		TinyWireM.write(dec2bcd(Time[RTC_DATE]));
 		TinyWireM.write(dec2bcd(Time[RTC_MONTH]));
 		TinyWireM.write(dec2bcd(Time[RTC_YEAR]));
