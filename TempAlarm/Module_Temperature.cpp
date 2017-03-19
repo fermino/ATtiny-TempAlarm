@@ -19,7 +19,7 @@
 
 		// Print template
 		LCD->setCursor(0, 1);
-		LCD->print("Sens:");
+		LCD->print(F("Sens:"));
 
 		UpdateDirection();
 
@@ -147,7 +147,7 @@
 		}
 		else
 		{
-			LCD->print(" ----- ");
+			LCD->print(F(" ----- "));
 
 			if(Enabled)
 				AlarmOn = true;

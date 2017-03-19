@@ -3,7 +3,7 @@
 	void RTCAlarm::init()
 	{
 		LCD->setCursor(14, 0);
-		LCD->print(":  :");
+		LCD->print(F(":  :"));
 
 		LCD->setCursor(12, 2);
 		LCD->print(F("Ambiente"));
@@ -75,7 +75,7 @@
 		LCD->setCursor(14, 3);
 		LCD->print(getTemperature());
 		LCD->print(RTC_DEGREE_CHAR);
-		LCD->print("C ");
+		LCD->print(F("C "));
 	}
 
 	void RTCAlarm::getTime()
