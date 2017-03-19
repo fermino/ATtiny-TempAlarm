@@ -15,7 +15,6 @@
 
 		private:
 			OneWire OW = OneWire(TEMPERATURE_ONE_WIRE_BUS);
-			byte SensorAddress[8];
 
 			bool Enabled = false;
 			bool DirectionUp = true;

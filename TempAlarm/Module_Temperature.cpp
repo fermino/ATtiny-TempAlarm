@@ -23,9 +23,6 @@
 
 		UpdateDirection();
 
-		// Find sensor's address
-		OW.search(SensorAddress);
-
 		// Get last used data from EEPROM
 
 		Threshold = eeprom_read_byte(TEMPERATURE_EEPROM_ADDRESS_THRESHOLD);
@@ -110,25 +107,23 @@
 
 		int8_t Temperature = -127;
 		uint8_t DecimalPart = 0;
-
-		// If the found (or not) address is a recognized one
-		if(SensorAddress[0] == 0x10 || SensorAddress[0] == 0x28)
+		
+		if(OW.reset())
 		{
+			// This reads the temperature from the scratchpad (sensor's memory)
+			OW.skip(); // Since there's only one device in the bus, we can skip the address
+			OW.write(0xBE); // Read Scratchpad [BEh] command
+
+			// Read and process the temperature
+			uint8_t LSB = OW.read();
+
+			Temperature = (OW.read() << 4) | (LSB >> 4);
+			DecimalPart = (LSB & 0b00001111) * 0.625f;
+
 			if(OW.reset())
 			{
-				// This reads the temperature from the scratchpad (sensor's memory)
-				OW.select(SensorAddress);
-				OW.write(0xBE); // Read Scratchpad [BEh] command
-
-				// Read and process the temperature
-				uint8_t LSB = OW.read();
-
-				Temperature = (OW.read() << 4) | (LSB >> 4);
-				DecimalPart = (LSB & 0b00001111) * 0.625f;
-
 				// Start another conversion; will be used in the next function call
-				OW.reset();
-				OW.select(SensorAddress);
+				OW.skip();
 				OW.write(0x44); // Convert T [44h] command
 			}
 		}
